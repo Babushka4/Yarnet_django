@@ -9,8 +9,31 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import environ
 from pathlib import Path
+
+# Init env
+env = environ.Env()
+
+def get_var(variable: str) -> any:
+    """Returns value of variable by name from .env or .debug.env file
+    
+    Parameters
+    ----------
+    variable : str, required
+        Variable name
+    """
+    return env(f'YARBPM_{variable}')
+
+def get_db(variable: str) -> any:
+    """Returns value of variable by name from .env or .debug.env file
+    
+    Parameters
+    ----------
+    variable : str, required
+        Variable name
+    """
+    return env(f'YARBPM_DB_{variable}')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,14 +42,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5*tpxt!*yke2z2t#5nx9zg$5ob((j&bn9d_9$w1!%j4)612twg'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Loading custom environment file
+env_path = Path(str(BASE_DIR.parent))
 
+if (DEBUG):
+    env_path /= '.debug.env'
+else:
+    env_path /= '.env'
+
+env.read_env(env.str('ENV_PATH', env_path.resolve()))
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = get_var('SECRET_KEY')
 
 # Application definition
 
@@ -120,10 +150,10 @@ ALLOWED_HOSTS = ['212.232.62.132']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'kharin',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': get_db('NAME'),
+        'USER': get_db('USER'),
+        'PASSWORD': get_db('PASS'),
+        'HOST': get_db('HOST'),
+        'PORT': get_db('PORT'),
     }
 }
