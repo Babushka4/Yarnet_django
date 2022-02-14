@@ -2,26 +2,26 @@
 
 ## Installation
 1. Clone repo
-2. Init virtual enviropment:
+2. Init and activate environment in root directory
 
 ```bash
-python -m venv venv
+source yarbpm
 ```
 
-3. Activate ENV:
+This command will create virtual environment and initialize it
+
+3. Synchronize all dependencies
 
 ```bash
-source ./venv/bin/activate
+depsync
 ```
 
-4. Install all dependencies:
+## Usage
 
-```bash
-pip install -r requirements.txt
-```
+Basic comands:
 
-5. Start `dev` server:
-
-```bash
-python manage.py runserver 0:8000
-```
+1. `close` - complete work with YarBPM
+2. `runserver` - run Django server on host 0.0.0.0:8000
+3. `makemigrations` - makes Django migrations
+4. `migrate` - Django migrate
+5. `createapp` - creates Django application
