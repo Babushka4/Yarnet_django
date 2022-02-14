@@ -1,37 +1,38 @@
 if [ ! -d "venv" ]; then
-  echo 'Initializing virtual environment...'
-  python -m venv venv
+  echo 'Initializing virtual environment...';
+  python -m venv venv;
 fi
 
 if [ -z "${VIRTUAL_ENV:-}"]; then
-  echo 'Activating viratul environment...'
-  source "venv/bin/activate"
+  echo 'Activating viratul environment...';
+  source "venv/bin/activate";
 fi
 
 if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] ; then
-    PS1="(yarbpm)${PS1:-}"
-    export PS1
-    VIRTUAL_ENV_PROMPT="(yarbpm)${VIRTUAL_ENV_PROMPT:-}"
-    export VIRTUAL_ENV_PROMPT
+    PS1="(yarbpm)${PS1:-}";
+    export PS1;
+    VIRTUAL_ENV_PROMPT="(yarbpm)${VIRTUAL_ENV_PROMPT:-}";
+    export VIRTUAL_ENV_PROMPT;
 fi
 
-cd "yarnetbpm"
-echo 'YarBPM is ready for development'
+cd "yarnetbpm";
+echo 'YarBPM is ready for development';
 
 depsync() {
   echo 'Synchronizing...'
-  pip install -r requrements.txt
+  pip install -r requrements.txt;
 }
 
 close () {
-  echo 'Closing YarBPM...'
+  echo 'Closing YarBPM...';
   deactivate;
 
   unset -f runserver;
   unset -f makemigrations;
   unset -f migrate;
   unset -f createapp;
-  echo 'Done! Thanks for using!'
+  echo 'Done! Thanks for using!';
+  cd ..;
   unset -f close;
 }
 
@@ -40,13 +41,13 @@ runserver () {
 }
 
 makemigrations () {
-  python "yarnetbpm/manage.py" makemigrations
+  python "yarnetbpm/manage.py" makemigrations;
 }
 
 migrate () {
-  python "yarnetbpm/manage.py" migrate
+  python "yarnetbpm/manage.py" migrate;
 }
 
 createapp () {
-  python "yarnetbpm/manage.py" startapp $1
+  python "yarnetbpm/manage.py" startapp $1;
 }
