@@ -61,6 +61,7 @@ SECRET_KEY = get_var('SECRET_KEY')
 # Application definition
 
 INSTALLED_APPS = [
+    'department.apps.DepartmentConfig',
     'employees.apps.EmployeesConfig',
     'api.apps.ApiConfig',
     'django.contrib.admin',
