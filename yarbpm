@@ -37,17 +37,17 @@ close () {
 }
 
 runserver () {
-  python "yarnetbpm/manage.py" runserver 0:8000;
+  python "manage.py" runserver 0:8000;
 }
 
 makemigrations () {
-  python "yarnetbpm/manage.py" makemigrations;
+  python "manage.py" makemigrations;
 }
 
 migrate () {
-  python "yarnetbpm/manage.py" migrate;
+  python "manage.py" migrate;
 }
 
 createapp () {
-  python "yarnetbpm/manage.py" startapp $1;
+  python "manage.py" startapp $1;
 }
