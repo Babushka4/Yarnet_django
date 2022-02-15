@@ -34,7 +34,9 @@ def add(request):
         return JsonResponse({ 'ok': True })
       else:
         return JsonResponse({ 'ok': False, 'message': 'No such department' }, status=400)
-    except:
+    except Exception as e:
+      e.with_traceback()
       return HttpResponse('Internal Server Error', status=500)
-  except:
+  except Exception as e:
+    e.with_traceback()
     return HttpResponse('Internal Server Error', status=500)
