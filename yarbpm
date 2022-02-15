@@ -31,6 +31,7 @@ close () {
   unset -f makemigrations;
   unset -f migrate;
   unset -f createapp;
+  unset -f addtoapi;
   echo 'Done! Thanks for using!';
   cd ..;
   unset -f close;
@@ -50,4 +51,34 @@ migrate () {
 
 createapp () {
   python "manage.py" startapp $1;
+}
+
+addtoapi () {
+  _API_PATH="./api/$1"
+  _METHOD_PATH="${_API_PATH:-}/$2"
+
+  if [ -d "${_API_PATH:-}" ]; then
+    if [ -d "${_METHOD_PATH:-}" ]; then
+      if [ -f "${_METHOD_PATH:-}/__init__.py" ]; then
+        echo "$(cat "${_METHOD_PATH:-}/__init__.py"), $3" > "${_METHOD_PATH:-}/__init__.py"
+      else
+        echo "from . import $3" > "${_METHOD_PATH:-}/__init__.py"
+      fi
+      
+      mkdir "${_METHOD_PATH:-}/$3"
+      echo "" > "${_METHOD_PATH:-}/$3/__init__.py"
+    else
+      if [ -f "${_API_PATH:-}/__init__.py" ]; then
+        echo "$(cat "${_API_PATH:-}/__init__.py"), $3" > "${_API_PATH:-}/__init__.py"
+      else
+        echo "from . import $2" > "${_API_PATH:-}/__init__.py"
+      fi
+
+      mkdir "${_METHOD_PATH:-}"
+      addtoapi $@
+    fi
+  else
+    mkdir "${_API_PATH:-}"
+    addtoapi $@
+  fi
 }
