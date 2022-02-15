@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponse
 
 from organization.models import Organization
-from decorators import GET, POST, deserialize_body, body_has
+from decorators import POST, deserialize_body, body_has
 
 @POST
 @deserialize_body
@@ -10,7 +10,9 @@ def add(request):
   body = request.deserialized
 
   try:
-    new_organization = Organization(name=body['name'])
+    new_organization = Organization(
+      name=body['name'],
+    )
 
     new_organization.save()
 
