@@ -24,7 +24,8 @@ Basic comands:
 2. `runserver` - run Django server on host 0.0.0.0:8000
 3. `makemigrations` - makes Django migrations
 4. `migrate` - Django migrate
-5. `createapp` - creates Django application
+5. `createapp {name}` - creates Django application with `name`
+6. `addtoapi {version} {method} {action}` - add to api with `version` new `action` with `method`
 
 ## API
 
