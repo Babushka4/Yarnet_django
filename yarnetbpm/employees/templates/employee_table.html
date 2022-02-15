@@ -1,0 +1,29 @@
+{% block content %}
+  <div class="employee-table">
+    <h2 class="employee-table__header">Список сотрудников</h2>
+
+    <table class="employee-table__content" border="1" cellpadding="10">
+      <thead>
+        <tr>
+          <td>ФИО</td>
+          <td>Отдел</td>
+          <td>Должность</td>
+          <td>Электронная почта</td>
+          <td>Телефон</td>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for employees in employee_list %}
+          <tr>
+            <td>{{ employees.fullname }}</td>
+            <td>{{ employees.get_department_name }}</td>
+            <td>{{ employees.position }}</td>
+            <td>{{ employees.email }}</td>
+            <td>{{ employees.telephone }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}
