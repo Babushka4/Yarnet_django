@@ -1,26 +1,32 @@
+{% extends 'index.html' %}
+
+{% block title %}
+  <title>Пользователи</title>
+{% endblock title %}
+
 {% block content %}
   <div class="employee-table">
     <h2 class="employee-table__header">Список сотрудников</h2>
 
-    <table class="employee-table__content" border="1" cellpadding="10">
+    <table class="employee-table__content table table-bordered tabel-striped" border="1" cellpadding="10">
       <thead>
         <tr>
-          <td>ФИО</td>
-          <td>Отдел</td>
-          <td>Должность</td>
-          <td>Электронная почта</td>
-          <td>Телефон</td>
+          <td class="col">ФИО</td>
+          <td class="col">Отдел</td>
+          <td class="col">Должность</td>
+          <td class="col">Электронная почта</td>
+          <td class="col">Телефон</td>
         </tr>
       </thead>
 
       <tbody>
         {% for employees in employee_list %}
           <tr>
-            <td>{{ employees.fullname }}</td>
-            <td>{{ employees.department.name }}</td>
-            <td>{{ employees.position }}</td>
-            <td>{{ employees.email }}</td>
-            <td>{{ employees.telephone }}</td>
+            <td class="col">{{ employees.fullname }}</td>
+            <td class="col">{{ employees.department.name }}</td>
+            <td class="col">{{ employees.position }}</td>
+            <td class="col">{{ employees.email }}</td>
+            <td class="col">{{ employees.telephone }}</td>
           </tr>
         {% endfor %}
       </tbody>
