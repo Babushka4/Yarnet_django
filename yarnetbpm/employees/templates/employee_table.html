@@ -17,7 +17,7 @@
         {% for employees in employee_list %}
           <tr>
             <td>{{ employees.fullname }}</td>
-            <td>{{ employees.get_department_name }}</td>
+            <td>{{ employees.department.name }}</td>
             <td>{{ employees.position }}</td>
             <td>{{ employees.email }}</td>
             <td>{{ employees.telephone }}</td>
