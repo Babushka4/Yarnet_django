@@ -13,6 +13,3 @@ class Employee(models.Model):
 
     def __str__(self):
         return f"{self.email} - {self.fullname} [{self.position} -> {self.department}] ({self.id})"
-
-    def get_department_name(self):
-        return Department.objects.filter(pk=self.department_id)[0].name
