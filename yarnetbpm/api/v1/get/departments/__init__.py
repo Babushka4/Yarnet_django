@@ -1,11 +1,10 @@
 from django.http import HttpResponse
-from django.core import serializers
 
 from department.models import Department
 from decorators import GET
 
 @GET
 def all(request):
-  response = serializers.serialize('json', Department.objects.all())
+  response = Department.objects.all().as_json
 
   return HttpResponse(response, content_type="application/json")
