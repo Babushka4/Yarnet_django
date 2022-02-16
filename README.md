@@ -1,6 +1,7 @@
 # YarNet BPM
 
 ## Installation
+
 1. Clone repo
 2. Init and activate environment in root directory
 
@@ -27,7 +28,7 @@ Basic comands:
 5. `createapp {name}` - creates Django application with `name`
 6. `addtoapi {version} {method} {action}` - add to api with `version` new `action` with `method`
 
-## API
+## API Documentation
 
 ### GET requests
 
