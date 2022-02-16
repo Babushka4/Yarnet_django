@@ -9,8 +9,20 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+from django.db.models.query import QuerySet
+from django.core.serializers import serialize
+
 import environ
 from pathlib import Path
+
+
+# serializing for QuerySet class
+@property
+def as_json(self, *args, **kwargs):
+    return serialize('json', self)
+
+# Adding new property to QuerySet class (I know that this is bad, but it's very usefull)
+setattr(QuerySet, 'as_json', as_json)
 
 # Init env
 env = environ.Env()
