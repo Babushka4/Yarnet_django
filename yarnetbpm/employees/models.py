@@ -1,7 +1,9 @@
 from django.db import models
 
 from department.models import Department
+from decorators.ClassDecorators import with_json_serialize
 
+@with_json_serialize
 class Employee(models.Model):
     fullname = models.CharField(max_length=255)
     department = models.ForeignKey(Department, on_delete=models.PROTECT)
