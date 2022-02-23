@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'organization.apps.OrganizationConfig',
     'department.apps.DepartmentConfig',
     'employees.apps.EmployeesConfig',
+    'district.apps.DistrictConfig',
     'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
