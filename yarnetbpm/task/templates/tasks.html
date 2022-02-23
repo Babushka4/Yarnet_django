@@ -1,0 +1,74 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block header %}
+  Список задач
+{% endblock header %}
+
+{% block styles %}
+{% endblock styles %}
+
+{% block body %}
+
+  <div class="card shadow-none" style="margin-top: 30px">
+    <div class="table-responsive">
+      <table class="table card-table table-vcenter text-nowrap mb-0">
+        <thead >
+          <tr>
+            <th>Орган</th>
+            <th>Район</th>
+            <th>Вид нарушения</th>
+            <th>Подвид нарушения</th>
+            <th>Дата акта</th>
+            <th>№ акта</th>
+            <th>Сотрудник</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task in task_list %}
+            <tr>
+              <td scope="row">
+                {{ task.organization.name }}
+              </td>
+
+              <td>
+                {{ task.district.name }}
+              </td>
+
+              <td>
+                {{ task.violation.name }}
+              </td>
+
+              <td>
+                {% for subs in task.violation.get_subspecies %}
+                  <p>
+                    {{ subs.name }}
+                  </p>
+                {% endfor %}
+              </td>
+
+              <td>
+                {{ task.date }}
+              </td>
+
+              <td>
+                № {{ task.number }}
+              </td>
+
+              <td>
+                {{ task.employee.fullname }}
+              </td>
+
+              <td>
+                {{ task.status.title }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+{% endblock body %}
