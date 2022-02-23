@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'employees.apps.EmployeesConfig',
     'district.apps.DistrictConfig',
     'vsubspecies.apps.VSubspeciesConfig',
+    'violation.apps.ViolationConfig',
     'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
