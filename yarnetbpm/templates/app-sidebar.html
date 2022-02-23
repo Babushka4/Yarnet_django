@@ -1,0 +1,50 @@
+{% load static%}
+
+<div class="app-sidebar app-sidebar2 shadow-none" style="background-color: #33333E !important">
+  <div class="app-sidebar__logo border-0">
+    <img
+      src="{% static 'assets/images/shield.png'%}"
+      style="width: 36px; height: 36px"
+      class="header-brand-img desktop-lgo dark-logo mobile-logo darkmobile-logo"
+      alt="Avatar"
+    >
+  </div>
+</div>
+
+<aside class="app-sidebar app-sidebar3 shadow-none" style="background-color: #33333E !important">
+  <div class="side-menu container my-auto">
+    <div class="row mb-5">
+      <a class="btn p-0 btn-icon col" href="javascript:void(0)" role="button">
+        {% include 'svg/home.svg' %}
+      </a>
+    </div>
+    <div class="row mb-5">
+      <a class="btn p-0 btn-icon col" href="javascript:void(0)" role="button">
+        {% include 'svg/user.svg' %}
+      </a>
+    </div>
+    <div class="row mb-5">
+      <a class="btn p-0 btn-icon col" href="javascript:void(0)" role="button">
+        {% include 'svg/mail.svg' %}
+      </a>
+    </div>
+    <div class="row mb-5">
+      <a class="btn p-0 btn-icon col" href="javascript:void(0)" role="button">
+        {% include 'svg/chart.svg' %}
+      </a>
+    </div>
+    <div class="row mb-5">
+      <a class="btn p-0 btn-icon col" href="javascript:void(0)" role="button">
+        {% include 'svg/calendar.svg' %}
+      </a>
+    </div>
+  </div>
+</aside>
+
+<div class="app-sidebar-help border-0" style="background-color: #33333E !important; z-index: 1000">
+  <div class="help d-flex justify-content-center">
+    <a class="btn p-0 btn-icon" href="javascript:void(0)" role="button">
+      {% include 'svg/bell.svg' %}
+    </a>
+  </div>
+</div>

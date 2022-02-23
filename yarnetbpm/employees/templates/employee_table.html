@@ -1,35 +1,57 @@
 {% extends 'index.html' %}
 
-{% block title %}
-  <title>Пользователи</title>
-{% endblock title %}
+{% load static %}
 
-{% block content %}
-  <div class="employee-table">
-    <h2 class="employee-table__header">Список сотрудников</h2>
+{% block header %}
+  Список сотрудников
+{% endblock header %}
 
-    <table class="employee-table__content table table-bordered tabel-striped" border="1" cellpadding="10">
-      <thead>
-        <tr>
-          <td class="col">ФИО</td>
-          <td class="col">Отдел</td>
-          <td class="col">Должность</td>
-          <td class="col">Электронная почта</td>
-          <td class="col">Телефон</td>
-        </tr>
-      </thead>
+{% block styles %}
+{% endblock styles %}
 
-      <tbody>
-        {% for employees in employee_list %}
+
+{% block body %}
+  <div class="card shadow-none" style="margin-top: 30px">
+    <div class="table-responsive">
+      <table class="table card-table table-vcenter text-nowrap mb-0">
+        <thead >
           <tr>
-            <td class="col">{{ employees.fullname }}</td>
-            <td class="col">{{ employees.department.name }}</td>
-            <td class="col">{{ employees.position }}</td>
-            <td class="col">{{ employees.email }}</td>
-            <td class="col">{{ employees.telephone }}</td>
+            <th>ФИО</th>
+            <th>Отдел</th>
+            <th>Должность</th>
+            <th>Электронная почта</th>
+            <th>Телефон</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for employees in employee_list %}
+            <tr>
+              <td scope="row">
+                {{ employees.fullname }}
+              </td>
+
+              <td>
+                {{ employees.department.name }}
+              </td>
+
+              <td>
+                {{ employees.position }}
+              </td>
+
+              <td>
+                {{ employees.email }}
+              </td>
+
+              <td>
+                {{ employees.telephone }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
-{% endblock content %}
+{% endblock body %}
+
+{% block scripts %}
+{% endblock scripts %}
