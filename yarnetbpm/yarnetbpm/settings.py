@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'vsubspecies.apps.VSubspeciesConfig',
     'violation.apps.ViolationConfig',
     'status.apps.StatusConfig',
+    'task.apps.TaskConfig',
     'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
