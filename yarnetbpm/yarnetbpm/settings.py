@@ -83,6 +83,7 @@ INSTALLED_APPS = [
     'district.apps.DistrictConfig',
     'vsubspecies.apps.VSubspeciesConfig',
     'violation.apps.ViolationConfig',
+    'status.apps.StatusConfig',
     'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
