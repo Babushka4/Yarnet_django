@@ -16,52 +16,57 @@
       <table class="table card-table table-vcenter text-nowrap mb-0">
         <thead >
           <tr>
-            <th>Орган</th>
-            <th>Район</th>
-            <th>Вид нарушения</th>
-            <th>Подвид нарушения</th>
-            <th>Дата акта</th>
-            <th>№ акта</th>
-            <th>Сотрудник</th>
-            <th>Статус</th>
+            <th class="py-5 text-capitalize task__table-header">Орган</th>
+            <th class="py-5 text-capitalize task__table-header">Район</th>
+            <th class="py-5 text-capitalize task__table-header">Вид нарушения</th>
+            <th class="py-5 text-capitalize task__table-header">Подвид нарушения</th>
+            <th class="py-5 text-capitalize task__table-header">Дата акта</th>
+            <th class="py-5 text-capitalize task__table-header">№ акта</th>
+            <th class="py-5 text-capitalize task__table-header">Сотрудник</th>
+            <th class="py-5 text-capitalize task__table-header">Статус</th>
           </tr>
         </thead>
         <tbody>
           {% for task in task_list %}
-            <tr>
-              <td scope="row">
+            <tr class="{% if task.status.title.lower == 'не рассмотрен' %} task__arrears {% endif %}">
+              <td scope="row" class="task__table-row">
                 {{ task.organization.name }}
               </td>
 
-              <td>
+              <td class="task__table-row">
                 {{ task.district.name }}
               </td>
 
-              <td>
+              <td class="task__table-row">
                 {{ task.violation.name }}
               </td>
 
-              <td>
+              <td class="task__table-row">
                 {% for subs in task.violation.get_subspecies %}
-                  <p>
+                  <p class="p-0 m-0">
                     {{ subs.name }}
                   </p>
                 {% endfor %}
               </td>
 
-              <td>
-                {{ task.date }}
+              <td class="task__table-row">
+                {{ task.date|date:"H:i m.d.Y" }}
               </td>
 
-              <td>
+              <td class="task__table-row">
                 № {{ task.number }}
               </td>
 
-              <td>
+              <td class="task__table-row">
                 {{ task.employee.fullname }}
               </td>
 
-              <td>
+              <td class="
+                {% if task.status.title.lower == 'на рассмотрении' %} task__cons
+                {% elif task.status.title.lower == 'на согласовании' %} task__approval
+                {% elif task.status.title.lower == 'не рассмотрен' %} task__status-arrears
+                {% endif %}
+              ">
                 {{ task.status.title }}
               </td>
             </tr>

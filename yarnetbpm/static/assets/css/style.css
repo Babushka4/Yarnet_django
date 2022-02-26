@@ -26,6 +26,35 @@
     opacity: 1 !important;
 }
 
+.task__arrears {
+    background-color: #FFF0F0 !important;
+}
+
+.task__cons {
+    background-color: rgba(111, 207, 151, 0.22) !important;
+}
+
+.task__approval {
+    background-color: rgba(242, 195, 74, 0.24) !important;
+}
+
+.task__status-arrears {
+    color: #FF4141;
+}
+
+.task__table-row {
+    padding-top: 27px !important;
+    padding-bottom: 27px !important;
+}
+
+.task__table-header {
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    line-height: 16px !important;
+    color: #757575 !important;
+}
+
 /*------ Accordion -------*/
 .accordion .card:not(:first-of-type):not(:last-of-type) {
     border-bottom: 0;
