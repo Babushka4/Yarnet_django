@@ -1,6 +1,26 @@
 (function($) {
     "use strict";
 
+    // ______________ Custom code
+    // Open new task sidebard
+    $('#new-task-button').click(() => {
+        $('#new-task-sidebar').fadeIn(() => {
+            $('#new-task-sidebar .sidebar').css({
+                transform: 'none',
+            }, 300);
+        });
+    });
+
+    // Close new task sidebar
+    $('#close-task-sidebar').click(() => {
+        $('#new-task-sidebar .sidebar').css({
+            transform: 'translateX(100%)',
+        }, 300);
+        setTimeout(() => {
+            $('#new-task-sidebar').fadeOut();
+        }, 150);
+    })
+
     // ______________ Page Loading
     $(window).on("load", function(e) {
         $("#global-loader").fadeOut("slow");
