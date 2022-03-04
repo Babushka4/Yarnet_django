@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
 
-from task.models import Task, DISTRICT_CHOICES, NewTask, NewFields
+from task.models import Task, NewTask, NewFields
 from regulations.models import Regulations
 from company.models import Company
 from violation.models import Violation
@@ -38,9 +38,11 @@ class TaskTable(TemplateView):
   def get_context_data(self, *args, **kwargs):
     context = super().get_context_data(**kwargs)
     context['company_list'] = Company.objects.all()
-    context['districts'] = DISTRICT_CHOICES
+    context['districts'] = Task.District.choices
     context['violation_list'] = Violation.objects.all()
     context['user_list'] = User.objects.all()
+    context['new_task_list'] = NewTask.objects.all()
+    print(context['new_task_list'][0].regulations.newfields_set.all())
 
     if 'id' in kwargs:
       context['task_list'] = self.model.objects.filter(user=kwargs['id'])

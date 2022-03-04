@@ -6,15 +6,14 @@ from user.models import User
 from regulations.models import Regulations
 from decorators.ClassDecorators import with_json_serialize
 
-DISTRICT_CHOICES = (
-  ('Дзержинский', 'Дзержинский'),
-  ('Кировский', 'Кировский'),
-)
-
 @with_json_serialize
 class Task(models.Model):
+  class District(models.TextChoices):
+    DZE = 'DZE', 'Дзержинский'
+    KIR = 'KIR', 'Кировский'
+
   company = models.ForeignKey(Company, on_delete=models.PROTECT)
-  district = models.CharField(max_length=100, choices=DISTRICT_CHOICES)
+  district = models.CharField(max_length=100, choices=District.choices)
   date = models.DateTimeField()
   number = models.CharField(max_length=6)
   user = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -44,6 +43,9 @@ class NewTask(models.Model):
   author = models.ForeignKey(User, on_delete=models.PROTECT, related_name='author')
   performer = models.ForeignKey(User, on_delete=models.PROTECT, related_name='performer')
 
+  def get_fields_in_table(self):
+    return self.regulations.newfields_set.filter(show_in_table=True)
+
 @with_json_serialize
 class NewFields(models.Model):
   class Types(models.TextChoices):
@@ -55,6 +57,7 @@ class NewFields(models.Model):
     LIST = 'LIS', 'СПИСОК'
     USER = 'USR', 'СОТРУДНИК'
     COMPANY = 'CMP', 'ОРГАНИЗАЦИЯ'
+    DISTRICT = 'DIS', 'РАЙОН'
     
   field_type = models.CharField(max_length=3, choices=Types.choices)
   title = models.CharField(max_length=255)
@@ -75,6 +78,7 @@ class NewValues(models.Model):
   value_list = models.CharField(default=None, null=True, max_length=100)
   value_user = models.ForeignKey(User, on_delete=models.PROTECT, default=None, null=True)
   value_company = models.ForeignKey(Company, on_delete=models.PROTECT, default=None, null=True)
+  value_district = models.CharField(max_length=3, default=None, null=True, choices=Task.District.choices)
   is_choosed = models.BooleanField(default=None, null=True)
 
   @property
@@ -103,6 +107,9 @@ class NewValues(models.Model):
 
       NewFields.Types.COMPANY:
         lambda: self.value_company,
+
+      NewFields.Types.DISTRICT:
+        lambda: self.value_district,
     }
 
     try:
@@ -138,6 +145,12 @@ class NewValues(models.Model):
       company = Company.objects.filter(pk=value)[0]
       self.value_company = company
 
+    def district_set():
+      if value in Task.District.choices:
+        self.value_district = value
+      else:
+        raise ValueError('Incorrect field "district"')
+
     def search_map():
       search_map = {
         NewFields.Types.STRING: str_set,
@@ -148,6 +161,7 @@ class NewValues(models.Model):
         NewFields.Types.LIST: list_set,
         NewFields.Types.USER: user_set,
         NewFields.Types.COMPANY: company_set,
+        NewFields.Types.DISTRICT: district_set,
       }
 
       search_map[self.field.field_type](value)
