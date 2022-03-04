@@ -77,14 +77,14 @@ SECRET_KEY = get_var('SECRET_KEY')
 # Application definition
 
 INSTALLED_APPS = [
-    'organization.apps.OrganizationConfig',
+    'authentication.apps.AuthenticationConfig',
+    'company.apps.CompanyConfig',
     'department.apps.DepartmentConfig',
-    'employees.apps.EmployeesConfig',
+    'user.apps.UserConfig',
     'district.apps.DistrictConfig',
-    'vsubspecies.apps.VSubspeciesConfig',
     'violation.apps.ViolationConfig',
-    'status.apps.StatusConfig',
     'task.apps.TaskConfig',
+    'regulations.apps.RegulationsConfig',
     'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -182,3 +182,6 @@ DATABASES = {
         'PORT': get_db('PORT'),
     }
 }
+
+# Path to login page
+LOGIN_REDIRECT_URL = '/login'
