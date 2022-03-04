@@ -1,0 +1,119 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block header %}
+  Список задач
+{% endblock header %}
+
+{% block styles %}
+  <link href="{% static ''%}assets/plugins/select2/select2.min.css" rel="stylesheet" />
+  <!-- Date Picker css -->
+  <link href="{% static ''%}assets/plugins/date-picker/date-picker.css" rel="stylesheet" />
+{% endblock styles %}
+
+{% block body %}
+  <div class="card shadow-none" style="margin-top: 30px">
+    {% for task in tasks_list %}
+      <h1>
+        {{ task.name }}
+      </h1>
+
+      <p class="text-muted ml-5">
+        {{ task.author.fullname }} / {{ task.performer.fullname }}
+      </p>
+
+      <h2>
+        Регламент: {{ task.regulations.reg_type }}
+      </h2>
+
+      <div class="card shadow-none ml-5">
+        <p>Кнопка: 
+          <a class="btn btn-primary" href="next" role="button">
+            {{ task.regulations.button_name }}
+          </a>
+        </p>
+
+        <p class="text-muted">
+          Родитель: 
+          {% if task.regulations.parent %}
+            {{ task.regulations.parent.reg_type }}
+          {% else %} Нет родителя {% endif %}
+        </p>
+
+        <div>
+          <p class="text-muted">
+            Дети:
+            
+            {% for child in task.regulations.parent_set %}
+              <span>
+                {{ child.reg_type }}
+              </span>
+            {% endfor %}
+          </p>
+        </div>
+
+        <p class="text-muted">
+          Исполнитель: 
+          {% if task.regulations.performer %}
+            {{ task.regulations.performer.fullname }}
+          {% else %} Исполнитель не меняется {% endif %}
+        </p>
+
+        <h3>
+          Поля
+        </h3>
+
+        <div class="card shadow-none ml-5">
+          {% for field in task.regulations.newfields_set.all %}
+            <p class="text-muted">
+              Тип: {{ field.field_type }}
+            </p>
+
+            <div>
+              <label>{{ field.title }}<label>
+
+              {% if field.field_type == field_types.STRING %}
+                <input type="text" value="{{ field.newvalues_set.all.0.value }}" />
+              {% elif field.field_type == field_types.NUMBER %}
+                <input type="number" value="{{ field.newvalues_set.all.0.value }}" />
+              {% elif field.field_type == field_types.DATE %}
+                <div class="input-group">
+                  <input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text">
+                </div>
+              {% elif field.field_type == field_types.MONEY %}
+                <input type="number" value="{{ field.newvalues_set.all.0.value }}" min="0.00" step="1" />
+              {% elif field.field_type == field_types.FILE %}
+                <input type="file">
+              {% elif field.field_type == field_types.LIST %}
+                <select class="form-control select2 form-select" data-placeholder="Choose one">
+                  <option label="Выберите">
+                  </option>
+
+                  {% for value in field.newvalues_set.all %}
+                    <option value="{{ value.id }}">{{ value.value }}</option>
+                  {% endfor %}
+                </select>
+              {% else %}
+
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock body %}
+
+{% block scripts %}
+
+  <!-- Datepicker js -->
+  <script src="{% static ''%}assets/plugins/date-picker/date-picker.js"></script>
+  <script src="{% static ''%}assets/plugins/date-picker/jquery-ui.js"></script>
+  <script src="{% static ''%}assets/plugins/input-mask/jquery.maskedinput.js"></script>
+
+  <!--Select2 js -->
+  <script src="{% static ''%}assets/plugins/select2/select2.full.min.js"></script>
+  <script src="{% static ''%}assets/js/select2.js"></script>
+
+{% endblock scripts %}
