@@ -24,9 +24,6 @@ class TaskTable(TemplateView):
   template_name = 'tasks.html'
   model = Task
 
-  def get(self, request):
-    print(request.user)
-
   def post(self, request, *args, **kwargs):
     _id = int(request.POST.get('next_id'))
     _task_id = int(request.POST.get('task_id'))
