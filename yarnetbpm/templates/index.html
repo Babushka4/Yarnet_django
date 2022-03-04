@@ -16,6 +16,37 @@
 	</head>
 
 	<body class="app sidebar-mini light-mode dark-sidebar sidenav-toggled">
+		
+		<div class="
+			conteiner-fluid
+			fog
+			vh-100
+			vw-100
+			position-absolute
+			flex-column
+			align-items-end
+			overflow-hidden
+		" id="new-task-sidebar">
+			<div class="
+				card
+				position-absolute
+				h-100
+				m-0
+				shadow-none
+				rounded-0
+				sidebar
+			">
+				<button type="button" class="
+					btn
+					btn-icon
+					position-absolute
+					close-sidebar
+				" id="close-task-sidebar">
+					<i class="fa fa-close"></i>
+				</button>
+				{% block task_sidebar %}{% endblock task_sidebar %}
+			</div>
+		</div>
 
 		<!---Global-loader-->
 		<div id="global-loader" >
