@@ -33,6 +33,7 @@ close () {
   unset -f createapp;
   unset -f addtoapi;
   unset -f runscript;
+  unset -f runshell;
   echo 'Done! Thanks for using!';
   cd ..;
   unset -f close;
@@ -91,5 +92,15 @@ runscript () {
     django-admin shell < "${_SCRIPT_PATH:-}";
   else
     echo "No such file!";
+  fi
+}
+
+runshell () {
+  _SHELL_TYPE="${1:-}"
+
+  if [ "${_SHELL_TYPE}" = "--standard" ]; then
+    python
+  else
+    python manage.py shell;
   fi
 }

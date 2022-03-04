@@ -28,6 +28,7 @@ Basic comands:
 5. `createapp {name}` - creates Django application with `name`
 6. `addtoapi {version} {method} {action}` - add to api with `version` new `action` with `method`
 7. `runscript {path_to_script}` - execute python script
+8. `runshell [--standard]` - run djang-shell or python-shell (if the argument was specified)
 
 ## API Documentation
 
