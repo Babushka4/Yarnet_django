@@ -58,6 +58,7 @@ class NewFields(models.Model):
     
   field_type = models.CharField(max_length=3, choices=Types.choices)
   title = models.CharField(max_length=255)
+  show_in_table = models.BooleanField(default=False)
   regulations = models.ForeignKey(NewRegulations, on_delete=models.PROTECT, default=None, null=True)
 
   def get_first_value(self):
