@@ -27,6 +27,7 @@ Basic comands:
 4. `migrate` - Django migrate
 5. `createapp {name}` - creates Django application with `name`
 6. `addtoapi {version} {method} {action}` - add to api with `version` new `action` with `method`
+7. `runscript {path_to_script}` - execute python script
 
 ## API Documentation
 
@@ -34,7 +35,7 @@ Basic comands:
 
 `GET /api/v1/employees/` - returns all employees
 `GET /api/v1/departments/` - return all departments
-`GET /api/v1/organizations/` - return all organizations
+`GET /api/v1/companies/` - return all organizations
 
 ### POST requests
 

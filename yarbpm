@@ -32,6 +32,7 @@ close () {
   unset -f migrate;
   unset -f createapp;
   unset -f addtoapi;
+  unset -f runscript;
   echo 'Done! Thanks for using!';
   cd ..;
   unset -f close;
@@ -80,5 +81,15 @@ addtoapi () {
   else
     mkdir "${_API_PATH:-}"
     addtoapi $@
+  fi
+}
+
+runscript () {
+  _SCRIPT_PATH="${1:-}"
+
+  if [ -f "${_SCRIPT_PATH:-}" ]; then
+    django-admin shell < "${_SCRIPT_PATH:-}";
+  else
+    echo "No such file!";
   fi
 }
