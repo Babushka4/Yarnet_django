@@ -32,9 +32,13 @@ class NewRegulations(models.Model):
 
   reg_type = models.CharField(max_length=3, choices=Types.choices, default=Types.DEFAULT)
   title = models.CharField(max_length=100, default=None, null=True)
-  button_name = models.CharField(max_length=255)
+  button_name = models.CharField(max_length=255, default=None, null=True)
   performer = models.ForeignKey(User, on_delete=models.PROTECT, default=None, null=True)
   parent = models.ForeignKey('self', on_delete=models.PROTECT, default=None, null=True)
+
+  @property
+  def childs(self):
+    return self.newregulations_set.all()
 
 @with_json_serialize
 class NewTask(models.Model):
@@ -42,9 +46,24 @@ class NewTask(models.Model):
   regulations = models.ForeignKey(NewRegulations, on_delete=models.PROTECT)
   author = models.ForeignKey(User, on_delete=models.PROTECT, related_name='author')
   performer = models.ForeignKey(User, on_delete=models.PROTECT, related_name='performer')
+  is_completed = models.BooleanField(default=False)
 
-  def get_fields_in_table(self):
-    return self.regulations.newfields_set.filter(show_in_table=True)
+  @property
+  def all_fields(self):
+    all_fields = [*list(self.regulations.newfields_set.all())]
+    reg_parent = self.regulations.parent
+
+    while reg_parent != None:
+      current_reglament_fields = list(reg_parent.newfields_set.all())
+      all_fields = [*all_fields, *current_reglament_fields]
+      reg_parent = reg_parent.parent
+    
+    return list(set(all_fields))
+
+
+  @property
+  def table_fields(self):
+    return list(filter(lambda x: x.show_in_table == True, self.all_fields))
 
 @with_json_serialize
 class NewFields(models.Model):
@@ -58,6 +77,7 @@ class NewFields(models.Model):
     USER = 'USR', 'СОТРУДНИК'
     COMPANY = 'CMP', 'ОРГАНИЗАЦИЯ'
     DISTRICT = 'DIS', 'РАЙОН'
+    NUM = 'NUM', 'НОМЕР'
     
   field_type = models.CharField(max_length=3, choices=Types.choices)
   title = models.CharField(max_length=255)
@@ -65,7 +85,10 @@ class NewFields(models.Model):
   regulations = models.ForeignKey(NewRegulations, on_delete=models.PROTECT, default=None, null=True)
 
   def get_first_value(self):
-    return self.values_set.all()[0].value
+    try:
+      return self.newvalues_set.all()[0].value
+    except IndexError:
+      return None
 
 @with_json_serialize
 class NewValues(models.Model):
@@ -110,12 +133,15 @@ class NewValues(models.Model):
 
       NewFields.Types.DISTRICT:
         lambda: self.value_district,
+
+      NewFields.Types.NUM:
+        lambda: self.value_string,
     }
 
     try:
       return search_map[self.field.field_type]()
     except KeyError:
-      raise TypeError(f'Unknown type "{self.field.field_type}')
+      raise TypeError(f'Unknown type "{self.field.field_type}"')
 
   @value.setter
   def value(self, value):
@@ -151,6 +177,9 @@ class NewValues(models.Model):
       else:
         raise ValueError('Incorrect field "district"')
 
+    def number_set():
+      self.value_string = value
+
     def search_map():
       search_map = {
         NewFields.Types.STRING: str_set,
@@ -162,6 +191,7 @@ class NewValues(models.Model):
         NewFields.Types.USER: user_set,
         NewFields.Types.COMPANY: company_set,
         NewFields.Types.DISTRICT: district_set,
+        NewFields.Types.NUM: number_set,
       }
 
       search_map[self.field.field_type](value)
