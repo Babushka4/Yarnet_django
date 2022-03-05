@@ -94,6 +94,15 @@
                     <option value="{{ value.id }}">{{ value.value }}</option>
                   {% endfor %}
                 </select>
+              {% elif field.field_type == field_types.USER %}
+                <select class="form-control select2 form-select" data-placeholder="Choose one">
+                  <option label="Выберите">
+                  </option>
+
+                  {% for value in field.newvalues_set.all %}
+                    <option value="{{ value.id }}">{{ value.value }}</option>
+                  {% endfor %}
+                </select>
               {% else %}
 
               {% endif %}
