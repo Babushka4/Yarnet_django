@@ -76,6 +76,28 @@ class Values(models.Model):
   value_district = models.CharField(max_length=3, default=None, null=True, choices=Task.District.choices)
   is_choosed = models.BooleanField(default=None, null=True)
 
+  def __init__(self, *args, value, field, **kwargs):
+    search_map = {
+      Fields.Types.STRING: 'value_string',
+      Fields.Types.INTEGER: 'value_int',
+      Fields.Types.FLOAT: 'value_float',
+      Fields.Types.DATE: 'value_date',
+      Fields.Types.FILE: 'value_file',
+      Fields.Types.LIST: 'value_list',
+      Fields.Types.USER: 'value_user',
+      Fields.Types.COMPANY: 'value_company',
+      Fields.Types.DISTRICT: 'value_district',
+      Fields.Types.NUM: 'value_string',
+    }
+
+    try:
+      kwargs[search_map[field.field_type]] = value
+      kwargs['field'] = field
+      
+      super().__init__(*args, **kwargs)
+    except KeyError:
+      raise TypeError(f'Unknown type "{field.field_type}"')
+
   @property
   def value(self):
     search_map = {
@@ -136,18 +158,15 @@ class Values(models.Model):
       self.value_list = value
 
     def user_set():
-      user = User.objects.filter(pk=value)[0]
+      [user] = User.objects.filter(pk=value)
       self.value_user = user
 
     def company_set():
-      company = Company.objects.filter(pk=value)[0]
+      [company] = Company.objects.filter(pk=value)
       self.value_company = company
 
     def district_set():
-      if value in Task.District.choices:
-        self.value_district = value
-      else:
-        raise ValueError('Incorrect field "district"')
+      self.value_district = value
 
     def number_set():
       self.value_string = value
@@ -168,4 +187,7 @@ class Values(models.Model):
 
       search_map[self.field.field_type](value)
 
-    search_map()
+    try:
+      search_map()
+    except KeyError:
+      raise TypeError(f'Unknown type "{self.field.field_type}"')
