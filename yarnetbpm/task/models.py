@@ -14,6 +14,7 @@ class Task(models.Model):
 
   name = models.CharField(max_length=255)
   regulations = models.ForeignKey(Regulations, on_delete=models.DO_NOTHING)
+  stage = models.ForeignKey(Regulations.Stage, on_delete=models.DO_NOTHING, default=None, null=True)
   author = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='task_author')
   performer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='task_performer')
   is_completed = models.BooleanField(default=False)
@@ -52,7 +53,7 @@ class Fields(models.Model):
   field_type = models.CharField(max_length=3, choices=Types.choices)
   title = models.CharField(max_length=255)
   show_in_table = models.BooleanField(default=False)
-  regulations = models.ForeignKey(Regulations, on_delete=models.DO_NOTHING, default=None, null=True)
+  stage = models.ForeignKey(Regulations.Stage, on_delete=models.DO_NOTHING, default=None, null=True)
 
   def get_first_value(self):
     try:

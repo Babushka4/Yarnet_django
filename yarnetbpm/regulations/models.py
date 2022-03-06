@@ -25,7 +25,8 @@ class Stage(models.Model):
 
 @with_json_serialize
 class Regulations(models.Model):
-  performer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="reg_performer")
-  author = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="reg_author")
-  first_stage = models.ForeignKey('Stage', on_delete=models.DO_NOTHING)
+  performer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="reg_performer", default=None, null=True)
+  author = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="reg_author", default=None, null=True)
+  first_stage = models.ForeignKey('Stage', on_delete=models.DO_NOTHING, default=None, null=True)
+  name = models.CharField(max_length=255)
   Stage = Stage
