@@ -15,63 +15,13 @@
     <h1 class="m-0 mb-5">Создание задачи</h1>
 
     <div class="border-bottom mb-5">
-      {% for field in task.regulations.all_fields %}
-        <div class="mb-5">
-          <label class="form-label">
-            {{ field.title }}
-          </label>
+      
+    </div>
 
-          {% if field.field_type == %}
-        </div>
-      {% endfor %}
-      <div class="mb-5">
-        <label class="form-label">Название органа</label>
-        <select class="form-control form-select" data-placeholder="Выберите компанию" name="company" role="button" required>
-          {% for company in company_list %}
-            <option value="{{ company.id }}">
-              {{ company.name }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="mb-5">
-        <label class="form-label">Район</label>
-        <select class="form-control form-select" data-placeholder="Выберите район" name="district" role="button" required>
-          {% for district in districts %}
-            <option value="{{ district.0 }}">
-              {{ district.1 }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="mb-5">
-        <label class="form-label">Вид нарушения</label>
-        <select class="form-control form-select" data-placeholder="Выберите вид нарушения" name="violation" role="button" required>
-          {% for violation in violation_list %}
-            <option value="{{ violation.id }}">
-              {{ violation.species }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="mb-5">
-        <label class="form-label">Номер акта</label>
-        <input class="form-control form-control-lg w-50" placeholder="000 000" name="number" required />
-      </div>
-
-      <div class="mb-5">
-        <label class="form-label">Сотрудник, составивший акт</label>
-        <select class="form-control form-select" data-placeholder="Выберите сотрудника" name="user" role="button" required>
-          {% for user in user_list %}
-            <option value="{{ user.id }}">
-              {{ user.fullname }}
-            </option>
-          {% endfor %}
-        </select>
-      </div>
+    <div class="mb-5">
+      <button type="button" class="btn btn-outline-info border-dashed">
+        <i class="fa fa-plus p-0 m-0"></i>
+      </button>
     </div>
     
     <div class="d-flex flex-column w-100 align-self-end mt-auto">
