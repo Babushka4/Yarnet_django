@@ -64,6 +64,7 @@ class Fields(models.Model):
 @with_json_serialize
 class Values(models.Model):
   field = models.ForeignKey(Fields, on_delete=models.DO_NOTHING)
+  task = models.ForeignKey(Task, on_delete=models.DO_NOTHING, default=None, null=True)
   value_string = models.CharField(max_length=255, default=None, null=True)
   value_int = models.IntegerField(default=None, null=True)
   value_float = models.FloatField(default=None, null=True)
