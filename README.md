@@ -30,6 +30,49 @@ Basic comands:
 7. `runscript {path_to_script}` - execute python script
 8. `runshell [--standard]` - run djang-shell or python-shell (if the argument was specified)
 
+## Code Documentation
+
+### Decorators
+
+#### JSON serializing
+
+If you'll want to use your model in API in future, you should add `@with_json_serialize` decorator
+And next you can use property `as_json` to get json serialized model
+
+**Example**
+```python
+from django.db import models
+
+from decorators.ClassDecoarators import with_json_serialize
+
+@with_json_serialize
+class MyModel(models.Model):
+  field1 = model.CharField(max_length=100)
+  field2 = model.IntegerField(default=None, null=True)
+
+# ...
+```
+
+**Usage**
+
+```python
+new_model = MyModel(field1="Some value", field2=3)
+
+new_model.save()
+print(MyModel.objects.all()[0].as_json)
+# [{"model": "<app>.MyModel", pk=1, "fields": {"field1": "Some value", "field2": 3}}]
+```
+
+Also you can serialize QuerySet with built-in property `as_json`
+
+**Usage**
+
+```python
+# From pervious example
+print(MyModel.object.all().as_json)
+# [{"model": "<app>.MyModel", pk=1, "fields": {"field1": "Some value", "field2": 3}}]
+```
+
 ## API Documentation
 
 ### GET requests
