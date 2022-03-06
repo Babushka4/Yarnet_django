@@ -12,40 +12,10 @@ class Task(models.Model):
     DZE = 'DZE', 'Дзержинский'
     KIR = 'KIR', 'Кировский'
 
-  company = models.ForeignKey(Company, on_delete=models.PROTECT)
-  district = models.CharField(max_length=100, choices=District.choices)
-  date = models.DateTimeField()
-  number = models.CharField(max_length=6)
-  user = models.ForeignKey(User, on_delete=models.PROTECT)
-  regulation = models.ForeignKey(Regulations, on_delete=models.PROTECT)
-
-  def __str__(self):
-    f""
-
-@with_json_serialize
-class NewRegulations(models.Model):
-  class Types(models.TextChoices):
-    DEFAULT = 'DEF', 'СТАНДАРТ'
-    ERROR = 'ERR', 'ОШИБКА'
-    SUCCESS = 'SUC', 'УСПЕХ'
-    WAIT = 'WAI', 'ОЖИДАНИЕ'
-
-  reg_type = models.CharField(max_length=3, choices=Types.choices, default=Types.DEFAULT)
-  title = models.CharField(max_length=100, default=None, null=True)
-  button_name = models.CharField(max_length=255, default=None, null=True)
-  performer = models.ForeignKey(User, on_delete=models.PROTECT, default=None, null=True)
-  parent = models.ForeignKey('self', on_delete=models.PROTECT, default=None, null=True)
-
-  @property
-  def childs(self):
-    return self.newregulations_set.all()
-
-@with_json_serialize
-class NewTask(models.Model):
   name = models.CharField(max_length=255)
-  regulations = models.ForeignKey(NewRegulations, on_delete=models.PROTECT)
-  author = models.ForeignKey(User, on_delete=models.PROTECT, related_name='author')
-  performer = models.ForeignKey(User, on_delete=models.PROTECT, related_name='performer')
+  regulations = models.ForeignKey(Regulations, on_delete=models.DO_NOTHING)
+  author = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='task_author')
+  performer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='task_performer')
   is_completed = models.BooleanField(default=False)
 
   @property
@@ -66,7 +36,7 @@ class NewTask(models.Model):
     return list(filter(lambda x: x.show_in_table == True, self.all_fields))
 
 @with_json_serialize
-class NewFields(models.Model):
+class Fields(models.Model):
   class Types(models.TextChoices):
     STRING = 'STR', 'СТРОКА'
     INTEGER = 'INT', 'ЦЕЛОЕ ЧИСЛО'
@@ -82,7 +52,7 @@ class NewFields(models.Model):
   field_type = models.CharField(max_length=3, choices=Types.choices)
   title = models.CharField(max_length=255)
   show_in_table = models.BooleanField(default=False)
-  regulations = models.ForeignKey(NewRegulations, on_delete=models.PROTECT, default=None, null=True)
+  regulations = models.ForeignKey(Regulations, on_delete=models.DO_NOTHING, default=None, null=True)
 
   def get_first_value(self):
     try:
@@ -91,50 +61,50 @@ class NewFields(models.Model):
       return None
 
 @with_json_serialize
-class NewValues(models.Model):
-  field = models.ForeignKey(NewFields, on_delete=models.PROTECT)
+class Values(models.Model):
+  field = models.ForeignKey(Fields, on_delete=models.DO_NOTHING)
   value_string = models.CharField(max_length=255, default=None, null=True)
   value_int = models.IntegerField(default=None, null=True)
   value_float = models.FloatField(default=None, null=True)
   value_date = models.DateTimeField(default=None, null=True)
   value_file = models.FileField(default=None, null=True)
   value_list = models.CharField(default=None, null=True, max_length=100)
-  value_user = models.ForeignKey(User, on_delete=models.PROTECT, default=None, null=True)
-  value_company = models.ForeignKey(Company, on_delete=models.PROTECT, default=None, null=True)
+  value_user = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=None, null=True)
+  value_company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, default=None, null=True)
   value_district = models.CharField(max_length=3, default=None, null=True, choices=Task.District.choices)
   is_choosed = models.BooleanField(default=None, null=True)
 
   @property
   def value(self):
     search_map = {
-      NewFields.Types.STRING:
+      Fields.Types.STRING:
         lambda: self.value_string,
 
-      NewFields.Types.INTEGER:
+      Fields.Types.INTEGER:
         lambda: self.value_int,
 
-      NewFields.Types.FLOAT:
+      Fields.Types.FLOAT:
         lambda: self.value_float,
 
-      NewFields.Types.DATE:
+      Fields.Types.DATE:
         lambda: self.value_date,
 
-      NewFields.Types.FILE:
+      Fields.Types.FILE:
         lambda: self.value_file,
 
-      NewFields.Types.LIST:
+      Fields.Types.LIST:
         lambda: self.value_list,
 
-      NewFields.Types.USER:
+      Fields.Types.USER:
         lambda: self.value_user,
 
-      NewFields.Types.COMPANY:
+      Fields.Types.COMPANY:
         lambda: self.value_company,
 
-      NewFields.Types.DISTRICT:
+      Fields.Types.DISTRICT:
         lambda: self.value_district,
 
-      NewFields.Types.NUM:
+      Fields.Types.NUM:
         lambda: self.value_string,
     }
 
@@ -182,16 +152,16 @@ class NewValues(models.Model):
 
     def search_map():
       search_map = {
-        NewFields.Types.STRING: str_set,
-        NewFields.Types.INTEGER: int_set,
-        NewFields.Types.FLOAT: float_set,
-        NewFields.Types.DATE: date_set,
-        NewFields.Types.FILE: file_set,
-        NewFields.Types.LIST: list_set,
-        NewFields.Types.USER: user_set,
-        NewFields.Types.COMPANY: company_set,
-        NewFields.Types.DISTRICT: district_set,
-        NewFields.Types.NUM: number_set,
+        Fields.Types.STRING: str_set,
+        Fields.Types.INTEGER: int_set,
+        Fields.Types.FLOAT: float_set,
+        Fields.Types.DATE: date_set,
+        Fields.Types.FILE: file_set,
+        Fields.Types.LIST: list_set,
+        Fields.Types.USER: user_set,
+        Fields.Types.COMPANY: company_set,
+        Fields.Types.DISTRICT: district_set,
+        Fields.Types.NUM: number_set,
       }
 
       search_map[self.field.field_type](value)

@@ -22,7 +22,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     username = models.CharField(max_length=255, unique=True)
     fullname = models.CharField(max_length=255, default=None, null=True)
-    department = models.ForeignKey(Department, on_delete=models.PROTECT, default=None, null=True)
+    department = models.ForeignKey(Department, on_delete=models.DO_NOTHING, default=None, null=True)
     position = models.CharField(max_length=100, default=None, null=True)
     email = models.CharField(max_length=255, default=None, null=True)
     telephone = models.CharField(max_length=15, default=None, null=True)

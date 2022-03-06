@@ -1,11 +1,31 @@
 from django.db import models
 
+from user.models import User
+from decorators.ClassDecorators import with_json_serialize
+
 # Create your models here.
 
-class Regulations(models.Model):
-  parent = models.ForeignKey('self', on_delete=models.PROTECT, default=None, null=True)
-  status = models.CharField(max_length=255, default='Новая')
-  button = models.CharField(max_length=255, default=None, null=True)
+@with_json_serialize
+class Stage(models.Model):
+  class Types(models.TextChoices):
+    DEFAULT = 'DEF', 'СТАНДАРТ'
+    ERROR = 'ERR', 'ОШИБКА'
+    SUCCESS = 'SUC', 'УСПЕХ'
+    WAIT = 'WAI', 'ОЖИДАНИЕ'
 
-  def get_next(self):
-    return Regulations.objects.filter(parent=self.id)
+  scheme = models.CharField(max_length=3, choices=Types.choices, default=Types.DEFAULT)
+  title = models.CharField(max_length=100, default=None, null=True)
+  button_name = models.CharField(max_length=255, default=None, null=True)
+  performer = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=None, null=True)
+  parent = models.ForeignKey('self', on_delete=models.DO_NOTHING, default=None, null=True)
+
+  @property
+  def childs(self):
+    return self.newregulations_set.all()
+
+@with_json_serialize
+class Regulations(models.Model):
+  performer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="reg_performer")
+  author = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="reg_author")
+  first_stage = models.ForeignKey('Stage', on_delete=models.DO_NOTHING)
+  Stage = Stage

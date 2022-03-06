@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 from django.shortcuts import redirect
 
-from task.models import NewRegulations, Task, NewTask, NewFields
+from task.models import Task, Fields
 from regulations.models import Regulations
 from company.models import Company
 from violation.models import Violation
@@ -10,12 +10,12 @@ from datetime import datetime
 
 class TaskInfo(TemplateView):
   template_name = 'task_info.html'
-  model = NewTask
+  model = Task
 
   def get_context_data(self, *args, **kwargs):
     context = super().get_context_data(**kwargs)
-    context['tasks_list'] = NewTask.objects.all()
-    context['field_types'] = NewFields.Types
+    context['tasks_list'] = Task.objects.all()
+    context['field_types'] = Fields.Types
     
     return context
 
@@ -27,8 +27,8 @@ class TaskTable(TemplateView):
   def post(self, request, *args, **kwargs):
     _id = int(request.POST.get('next_id'))
     _task_id = int(request.POST.get('task_id'))
-    [_task] = NewTask.objects.filter(pk=_task_id)
-    [_regulations] = NewRegulations.objects.filter(pk=_id)
+    [_task] = Task.objects.filter(pk=_task_id)
+    [_regulations] = Regulations.objects.filter(pk=_id)
     _task.regulations = _regulations
     
     if len(_task.regulations.childs) == 0:
@@ -44,9 +44,9 @@ class TaskTable(TemplateView):
     context['districts'] = Task.District.choices
     context['violation_list'] = Violation.objects.all()
     context['user_list'] = User.objects.all()
-    context['new_task_list'] = NewTask.objects.filter(is_completed=False)
-    context['reg_types'] = NewRegulations.Types
-    context['field_types'] = NewFields.Types
+    context['new_task_list'] = Task.objects.filter(is_completed=False)
+    context['reg_types'] = Regulations.Types
+    context['field_types'] = Fields.Types
 
     if 'id' in kwargs:
       context['task_list'] = self.model.objects.filter(user=kwargs['id'])
