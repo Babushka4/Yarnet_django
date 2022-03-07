@@ -21,20 +21,20 @@ class Task(models.Model):
 
   @property
   def all_fields(self):
-    all_fields = [*list(self.regulations.newfields_set.all())]
-    reg_parent = self.regulations.parent
+    all_fields = [*list(self.stage.fields_set.all())]
+    stage_parent = self.stage.parent
 
-    while reg_parent != None:
-      current_reglament_fields = list(reg_parent.newfields_set.all())
+    while stage_parent != None:
+      current_reglament_fields = list(stage_parent.fields_set.all())
       all_fields = [*all_fields, *current_reglament_fields]
-      reg_parent = reg_parent.parent
+      stage_parent = stage_parent.parent
     
     return list(set(all_fields))
 
-
   @property
   def table_fields(self):
-    return list(filter(lambda x: x.show_in_table == True, self.all_fields))
+    return list(filter(lambda x: x.show_in_table, self.all_fields))
+  
 
 @with_json_serialize
 class Fields(models.Model):
@@ -57,7 +57,12 @@ class Fields(models.Model):
 
   def get_first_value(self):
     try:
-      return self.newvalues_set.all()[0].value
+      value = self.values_set.filter()[0].value
+
+      if isinstance(value, models.Model):
+        return value.displayed_name
+
+      return value
     except IndexError:
       return None
 
@@ -76,7 +81,7 @@ class Values(models.Model):
   value_district = models.CharField(max_length=3, default=None, null=True, choices=Task.District.choices)
   is_choosed = models.BooleanField(default=None, null=True)
 
-  def __init__(self, *args, value, field, **kwargs):
+  def __init__(self, *args, value=None, field=None, **kwargs):
     search_map = {
       Fields.Types.STRING: 'value_string',
       Fields.Types.INTEGER: 'value_int',
@@ -91,9 +96,12 @@ class Values(models.Model):
     }
 
     try:
-      kwargs[search_map[field.field_type]] = value
-      kwargs['field'] = field
-      
+      if (value != None):
+        kwargs[search_map[field.field_type]] = value
+
+      if (field != None):
+        kwargs['field'] = field
+
       super().__init__(*args, **kwargs)
     except KeyError:
       raise TypeError(f'Unknown type "{field.field_type}"')
