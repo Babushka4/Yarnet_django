@@ -34,3 +34,7 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return f"{self.email} - {self.fullname} [{self.position} -> {self.department}] ({self.id})"
+
+    @property
+    def displayed_name(self):
+        return f"{self.fullname}"
