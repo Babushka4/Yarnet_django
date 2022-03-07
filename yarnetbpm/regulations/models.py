@@ -21,7 +21,7 @@ class Stage(models.Model):
 
   @property
   def childs(self):
-    return self.newregulations_set.all()
+    return self.stage_set.all()
 
 @with_json_serialize
 class Regulations(models.Model):
