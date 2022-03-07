@@ -21,6 +21,26 @@
         }, 150);
     })
 
+    // create new task by regulation
+    $('#new-task-by-regl').click(async () => {
+        content = await $.ajax({
+            url: 'get-form/',
+            method: 'POST',
+            data: {
+                id: Number($('#new-task-by-regl').attr('data-regulations')),
+            },
+        });
+
+        let button_parent = $('#new-task-by-regl').parent()
+        button_parent.after(content.html);
+        button_parent.remove();
+    });
+
+    // appling mask to all input with attribute 'data-mask'
+    // for (let el in $('*[data-mask]')) {
+    //     $(el).mask($(el).attr('data-mask'));
+    // }
+
     // ______________ Page Loading
     $(window).on("load", function(e) {
         $("#global-loader").fadeOut("slow");
