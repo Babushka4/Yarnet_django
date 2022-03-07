@@ -11,23 +11,24 @@
 {% endblock styles %}
 
 {% block task_sidebar %}
-  <form class="d-flex flex-column h-100" action="new_task/" method="POST">
+  <form class="d-flex flex-column h-100" action="new_task/" method="POST" id="task-create-form">
     <h1 class="m-0 mb-5">Создание задачи</h1>
 
     <div class="border-bottom mb-5">
       
     </div>
 
-    <div class="mb-5">
-      <button type="button" class="btn btn-outline-info border-dashed">
-        <i class="fa fa-plus p-0 m-0"></i>
-      </button>
-    </div>
-    
-    <div class="d-flex flex-column w-100 align-self-end mt-auto">
-      <button type="submit" class="btn btn-success btn-lg mb-3">Создать заявку</button>
-      <button type="button" class="btn btn-light btn-lg">Архивировать</button>
-    </div>
+    {% for reg in regulations_list %}
+      <div class="mb-5">
+        <button type="button" class="btn btn-outline-info border-dashed" id="new-task-by-regl" data-regulations="{{ reg.id }}">
+          <i class="fe fe-plus mr-2"></i>
+          {{ reg.name }}
+        </button>
+      </div>
+    {% endfor %}
+
+    {% block sidebar_content %}
+    {% endblock sidebar_content %}
   </form>
 {% endblock task_sidebar %}
 
@@ -44,38 +45,34 @@
       <table class="table card-table table-vcenter text-nowrap mb-0">
         <thead >
           <tr>
-            {% for task in new_task_list %}
-              {% for field in task.table_fields %}
-                <th class="py-5 text-capitalize task__table-header">
-                  {{ field.title }}
-                </th>
-              {% endfor %}
-
+            {% for field in task_list.0.table_fields %}
               <th class="py-5 text-capitalize task__table-header">
-                Исполнитель
-              </th>
-
-              <th class="py-5 text-capitalize task__table-header">
-                Регламент
-              </th>
-
-              <th class="py-5 text-capitalize task__table-header">
-                Действия
+                {{ field.title }}
               </th>
             {% endfor %}
+
+            <th class="py-5 text-capitalize task__table-header">
+              Исполнитель
+            </th>
+
+            <th class="py-5 text-capitalize task__table-header">
+              Этап
+            </th>
+
+            <th class="py-5 text-capitalize task__table-header">
+              Действия
+            </th>
           </tr>
         </thead>
         <tbody>
-          {% for task in new_task_list %}
-            <tr class="{% if task.regulation.reg_type == reg_types.ERROR %} task__arrears {% endif %}">
+          {% for task in task_list %}
+            <tr class="{% if task.stage.scheme == stage_schemes.ERROR %} task__arrears {% endif %}">
               {% for field in task.table_fields %}
                 <td class="task__table-row">
                   {% if field.get_first_value == None %}
                     ─
                   {% elif field.field_type == field_types.DATE %}
                     {{ field.get_first_value|date:"H:i m.d.Y" }}
-                  {% elif field.field_type == field_types.NUM %}
-                    № {{ field.get_first_value }}
                   {% else %}
                     {{ field.get_first_value }}
                   {% endif %}
@@ -87,25 +84,25 @@
               </td>
 
               <td scope="row" class="
-                {% if task.regulations.reg_type == reg_types.SUCCESS %} task__cons
-                {% elif task.regulations.reg_type == reg_types.WAIT %} task__approval
-                {% elif task.regulations.reg_type == reg_types.ERROR %} task__status-arrears
+                {% if task.stage.scheme == stage_schemes.SUCCESS %} task__cons
+                {% elif task.stage.scheme == stage_schemes.WAIT %} task__approval
+                {% elif task.stage.scheme == stage_schemes.ERROR %} task__status-arrears
                 {% endif %}
               ">
-                {{ task.regulations.title }}
+                {{ task.stage.title }}
               </td>
 
               <td class="task__table-row">
                 <form method="POST" action="">
                   <input type="hidden" name="task_id" value="{{ task.id }}">
 
-                  {% if task.regulations.childs|length != 0 %}
-                    {% for next in task.regulations.childs %}
+                  {% if task.stage.childs|length != 0 %}
+                    {% for next in task.stage.childs %}
                       <button
                         class="btn
-                          {% if next.reg_type == reg_types.DEFAULT %} btn-outline-info
-                          {% elif next.reg_type == reg_types.SUCCESS %} btn-outline-success
-                          {% elif next.reg_type == reg_types.WAIT %} btn-outline-warning
+                          {% if next.scheme == stage_schemes.DEFAULT %} btn-outline-info
+                          {% elif next.scheme == stage_schemes.SUCCESS %} btn-outline-success
+                          {% elif next.scheme == stage_schemes.WAIT %} btn-outline-warning
                           {% endif %}
                         "
                         name="next_id"
