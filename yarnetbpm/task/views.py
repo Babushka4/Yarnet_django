@@ -78,7 +78,16 @@ class AddNewTask(TemplateView):
       Fields.Types.USER: User,
       Fields.Types.COMPANY: Company,
     }
-    
+    new_task = Task(
+      name=task_name,
+      regulations=regulations,
+      stage=regulations.first_stage,
+      author=author,
+      performer=task_performer,
+    )
+
+    new_task.save()
+
     for field in fields:
       posted_value = request.POST.get(f"value_{field.id}")
       correct_value = posted_value
@@ -90,20 +99,10 @@ class AddNewTask(TemplateView):
         correct_value = int(correct_value)
         [correct_value] = _class[field.field_type].objects.filter(pk=correct_value)
 
-      new_value = Values(field=field, value=correct_value)
+      new_value = Values(field=field, value=correct_value, task=new_task)
       new_value.save()
       values.append(new_value)
     
-    new_task = Task(
-      name=task_name,
-      regulations=regulations,
-      stage=regulations.first_stage,
-      author=author,
-      performer=task_performer,
-    )
-
-    new_task.save()
-
     return redirect('/tasks/')
 
 
@@ -112,10 +111,21 @@ def get_form(request):
   regulations_id = request.POST.get('id')
   t = loader.get_template('create_new_task_content.html')
   render_data = {
+    'reg_list': Regulations.objects.all(),
     'regulations': Regulations.objects.filter(pk=regulations_id)[0],
     'field_types': Fields.Types,
     'all_users': User.objects.all(),
     'all_companies': Company.objects.all(),
+  }
+  html = t.render(render_data, request=request)
+
+  return HttpResponse(json.dumps({'html': html}), 'application/json')
+
+@POST
+def get_sidebar_body(request):
+  t = loader.get_template('task_creator_sidebar.html')
+  render_data = {
+    'regulations_list': Regulations.objects.all(),
   }
   html = t.render(render_data, request=request)
 
