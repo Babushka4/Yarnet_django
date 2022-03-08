@@ -34,6 +34,19 @@ class Task(models.Model):
   @property
   def table_fields(self):
     return list(filter(lambda x: x.show_in_table, self.all_fields))
+
+  @property
+  def all_values(self):
+    return self.values_set.all()
+
+  @property
+  def table_values(self):
+    table_fields = self.table_fields
+    all_values = self.all_values
+
+    print(list(filter(lambda value: value.field in table_fields, all_values)))
+
+    return list(filter(lambda value: value.field in table_fields, all_values))
   
 
 @with_json_serialize
@@ -177,7 +190,7 @@ class Values(models.Model):
       self.value_district = value
 
     def number_set():
-      self.value_string = value
+      self.value_string = f'№ {value}'
 
     def search_map():
       search_map = {
@@ -199,3 +212,11 @@ class Values(models.Model):
       search_map()
     except KeyError:
       raise TypeError(f'Unknown type "{self.field.field_type}"')
+
+  def displayed_value(self):
+    value = self.value
+
+    if isinstance(value, models.Model):
+      return value.displayed_name
+
+    return value
