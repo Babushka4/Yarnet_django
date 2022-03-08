@@ -78,6 +78,14 @@
     right: 24px;
 }
 
+.task-hover-effect:hover {
+    background-color: #f0f0f0 !important;
+}
+
+.task-hover-effect.task__arrears:hover {
+    background-color: #ddcece !important;
+}
+
 /*------ Accordion -------*/
 .accordion .card:not(:first-of-type):not(:last-of-type) {
     border-bottom: 0;
