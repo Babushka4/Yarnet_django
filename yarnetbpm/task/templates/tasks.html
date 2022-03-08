@@ -11,25 +11,11 @@
 {% endblock styles %}
 
 {% block task_sidebar %}
-  <form class="d-flex flex-column h-100" action="new_task/" method="POST" id="task-create-form">
-    <h1 class="m-0 mb-5">Создание задачи</h1>
-
-    <div class="border-bottom mb-5">
+  <div class="sidebar-body__wrapper">
+    {% block sidebar_body %}
       
-    </div>
-
-    {% for reg in regulations_list %}
-      <div class="mb-5">
-        <button type="button" class="btn btn-outline-info border-dashed" id="new-task-by-regl" data-regulations="{{ reg.id }}">
-          <i class="fe fe-plus mr-2"></i>
-          {{ reg.name }}
-        </button>
-      </div>
-    {% endfor %}
-
-    {% block sidebar_content %}
-    {% endblock sidebar_content %}
-  </form>
+    {% endblock sidebar_body %}
+  </div>
 {% endblock task_sidebar %}
 
 {% block body %}
@@ -66,15 +52,15 @@
         </thead>
         <tbody>
           {% for task in task_list %}
-            <tr class="{% if task.stage.scheme == stage_schemes.ERROR %} task__arrears {% endif %}">
-              {% for field in task.table_fields %}
+            <tr class="{% if task.stage.scheme == stage_schemes.ERROR %} task__arrears {% endif %} task-hover-effect" role="button">
+              {% for value in task.table_values %}
                 <td class="task__table-row">
-                  {% if field.get_first_value == None %}
+                  {% if value.displayed_value == None %}
                     ─
-                  {% elif field.field_type == field_types.DATE %}
-                    {{ field.get_first_value|date:"H:i m.d.Y" }}
+                  {% elif value.field.field_type == field_types.DATE %}
+                    {{ value.displayed_value|date:"H:i m.d.Y" }}
                   {% else %}
-                    {{ field.get_first_value }}
+                    {{ value.displayed_value }}
                   {% endif %}
                 </td>
               {% endfor %}

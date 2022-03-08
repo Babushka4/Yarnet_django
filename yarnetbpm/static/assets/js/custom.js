@@ -4,13 +4,36 @@
     // ______________ Custom code
     // Open new task sidebard
     $('#new-task-button').click(() => {
-        $('#new-task-sidebar').fadeIn(() => {
-            $('#new-task-sidebar .sidebar').css({
-                transform: 'none',
-            }, 300);
-        });
-    });
+        content = $.ajax({
+            url: 'get-sidebar-body/',
+            method: 'POST',
+        })
 
+        content.then((response) => {
+            $('.sidebar-body__wrapper').append(response.html);
+            $('#new-task-sidebar').fadeIn(() => {
+                $('#new-task-sidebar .sidebar').css({
+                    transform: 'none',
+                }, 300);
+            });
+
+            // create new task by regulation
+            $('#new-task-by-regl').click(async () => {
+                content = await $.ajax({
+                    url: 'get-form/',
+                    method: 'POST',
+                    data: {
+                        id: Number($('#new-task-by-regl').attr('data-regulations')),
+                    },
+                });
+
+                $('#creator-buttons').after(content.html);
+                $('#creator-buttons').remove();
+            });
+        });
+
+    });
+    
     // Close new task sidebar
     $('#close-task-sidebar').click(() => {
         $('#new-task-sidebar .sidebar').css({
@@ -18,23 +41,10 @@
         }, 300);
         setTimeout(() => {
             $('#new-task-sidebar').fadeOut();
+            $('.sidebar-body__wrapper').empty();
         }, 150);
     })
-
-    // create new task by regulation
-    $('#new-task-by-regl').click(async () => {
-        content = await $.ajax({
-            url: 'get-form/',
-            method: 'POST',
-            data: {
-                id: Number($('#new-task-by-regl').attr('data-regulations')),
-            },
-        });
-
-        let button_parent = $('#new-task-by-regl').parent()
-        button_parent.after(content.html);
-        button_parent.remove();
-    });
+    
 
     // appling mask to all input with attribute 'data-mask'
     // for (let el in $('*[data-mask]')) {

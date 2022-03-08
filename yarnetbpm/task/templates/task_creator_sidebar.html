@@ -1,0 +1,19 @@
+{% block sidebar_body %}
+  <form class="d-flex flex-column h-100" action="new_task/" method="POST" id="task-create-form">
+    <h1 class="m-0 mb-5">Создание задачи</h1>
+    
+    <div id="creator-buttons">
+      {% for reg in regulations_list %}
+        <div class="mb-5">
+          <button type="button" class="btn btn-outline-info border-dashed" id="new-task-by-regl" data-regulations="{{ reg.id }}">
+            <i class="fe fe-plus mr-2"></i>
+            {{ reg.name }}
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% block sidebar_content %}
+    {% endblock sidebar_content %}
+  </form>
+{% endblock sidebar_body %}
