@@ -52,7 +52,16 @@
         </thead>
         <tbody>
           {% for task in task_list %}
-            <tr class="{% if task.stage.scheme == stage_schemes.ERROR %} task__arrears {% endif %} task-hover-effect" role="button">
+            <tr
+              class="
+                {% if task.stage.scheme == stage_schemes.ERROR %}
+                  task__arrears
+                {% endif %}
+                task-hover-effect
+              "
+              role="button"
+              data-task-id="{{ task.id }}"
+            >
               {% for value in task.table_values %}
                 <td class="task__table-row">
                   {% if value.displayed_value == None %}
