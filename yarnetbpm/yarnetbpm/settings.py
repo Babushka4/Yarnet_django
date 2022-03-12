@@ -95,6 +95,8 @@ INSTALLED_APPS = [
     'ltr.apps.LtrConfig'
 ]
 
+AUTH_USER_MODEL = 'user.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
