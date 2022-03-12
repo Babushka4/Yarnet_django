@@ -44,8 +44,6 @@ class Task(models.Model):
     table_fields = self.table_fields
     all_values = self.all_values
 
-    print(list(filter(lambda value: value.field in table_fields, all_values)))
-
     return list(filter(lambda value: value.field in table_fields, all_values))
   
 
@@ -110,7 +108,10 @@ class Values(models.Model):
 
     try:
       if (value != None):
-        kwargs[search_map[field.field_type]] = value
+        if (field.field_type == Fields.Types.NUM):
+          kwargs[search_map[field.field_type]] = f'№ {value}'
+        else:
+          kwargs[search_map[field.field_type]] = value
 
       if (field != None):
         kwargs['field'] = field
