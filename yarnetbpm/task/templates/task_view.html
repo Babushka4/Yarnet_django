@@ -1,0 +1,90 @@
+{% block sidebar_body %}
+  <div class="d-flex flex-column h-100">
+    <div class="m-0 mb-5 d-flex flex-row">
+      <h1>
+        {{ task.name }}
+      </h1>
+
+      <button
+        class="btn disabled"
+      >
+        {{ task.stage.title }}
+      </button>
+    </div>
+
+    {% block sidebar_content %}
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-row justify-content-end">
+          <button id="task-history" class="btn btn-outline-warning" data-task-id="{{ task.id }}">
+            История
+          </button>
+        </div>
+
+        <div class="d-flex flex-column">
+          <p>
+            <span class="text-muted">
+              Автор: 
+            </span>
+
+            <button class="btn btn-light disabled">
+              {{ task.author.fullname }}
+            </button>
+          </p>
+          
+          <p>
+            <span class="text-muted">
+              Текущий исполнитель: 
+            </span>
+            
+            <button class="btn btn-light disabled">
+              {{ task.performer.fullname }}
+            </button>
+          </p>
+          
+          <hr class="mt-0 mb-4" />
+
+          {% for value in task.all_values %}
+            <p>
+              <span class="text-muted">
+                {{ value.field.title }}: 
+              </span>
+
+              <button class="btn btn-light disabled">
+                {% if value.displayed_value == None %}
+                  ─
+                {% elif value.field.field_type == field_types.DATE %}
+                  {{ value.displayed_value|date:"H:i m.d.Y" }}
+                {% else %}
+                  {{ value.displayed_value }}
+                {% endif %}
+              </button>
+            </p>
+          {% endfor %}
+
+          <hr class="mt-0 mb-4" />
+
+          <form method="POST" action="" class="mt-auto">
+            <input type="hidden" name="task_id" value="{{ task.id }}">
+
+            {% if task.stage.childs|length != 0 %}
+              {% for next in task.stage.childs %}
+                <button
+                  class="btn btn-block
+                    {% if next.scheme == stage_schemes.DEFAULT %} btn-outline-info
+                    {% elif next.scheme == stage_schemes.SUCCESS %} btn-outline-success
+                    {% elif next.scheme == stage_schemes.WAIT %} btn-outline-warning
+                    {% endif %}
+                  "
+                  name="next_id"
+                  value="{{ next.id }}"
+                >
+                  {{ next.button_name }}
+                </button>
+              {% endfor %}
+            {% endif %}
+          </form>
+        </div>
+      </div>
+    {% endblock sidebar_content %}
+  </div>
+{% endblock sidebar_body %}

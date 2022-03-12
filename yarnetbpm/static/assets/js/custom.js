@@ -6,55 +6,52 @@
             $('#new-task-sidebar .sidebar').css({
                 transform: 'none',
             }, 300);
-        });
+        })
     }
-
-    function closeSidebar() {
-        $('#close-task-sidebar').click(() => {
-            $('#new-task-sidebar .sidebar').css({
-                transform: 'translateX(100%)',
-            }, 300);
-            setTimeout(() => {
-                $('#new-task-sidebar').fadeOut();
-                $('.sidebar-body__wrapper').empty();
-            }, 150);
-        });
+    
+    function closeSidebar(fun) {
+        $('#new-task-sidebar .sidebar').css({
+            transform: 'translateX(100%)',
+        }, 300);
+        setTimeout(() => {
+            $('#new-task-sidebar').fadeOut();
+            $('.sidebar-body__wrapper').empty();
+            if (typeof fun === 'function') fun();
+        }, 150);
     }
-
+    
     // ______________ Custom code
     // Open new task sidebard
     $('#new-task-button').click(() => {
-        content = $.ajax({
+        let content = $.ajax({
             url: 'get-sidebar-body/',
             method: 'POST',
         })
-
+        
         content.then((response) => {
             $('.sidebar-body__wrapper').append(response.html);
             openSidebar();
-
+            
             // create new task by regulation
             $('#new-task-by-regl').click(async function () {
-                content = await $.ajax({
+                let content = await $.ajax({
                     url: 'get-form/',
                     method: 'POST',
                     data: {
                         id: Number(this.dataset.regulations),
                     },
                 });
-
+                
                 $('#creator-buttons').after(content.html);
                 $('#creator-buttons').remove();
             });
         });
-
+        
     });
     
-    // Close new task sidebar
-    closeSidebar();
-    
-    $('tbody > tr').on('click', async function (e) {
-        content = await $.ajax({
+    $('#close-task-sidebar').click(closeSidebar);
+    $('tbody > tr').on('click', async function viewTask(e) {
+        let content = await $.ajax({
             url: 'get-view-task-body/',
             method: 'POST',
             data: {
@@ -62,10 +59,29 @@
             },
         });
 
-
         $('.sidebar-body__wrapper').append(content.html);
+        $('#task-history').on('click', async function (e) {
+            let content = await $.ajax({
+                url: 'get-view-task-history/',
+                method: 'POST',
+                data: {
+                    task_id: Number(this.dataset.taskId),
+                },
+            });
+    
+            closeSidebar(() => {
+                $('.sidebar-body__wrapper').append(content.html);
+                $('#task-view').on('click', function (event) {
+                    closeSidebar(() => {
+                        $(`tbody > tr[data-task-id="${this.dataset.taskId}"]`).click();
+                    });
+                });
+                openSidebar();
+            });
+        });
         openSidebar();
     });
+    
 
     // appling mask to all input with attribute 'data-mask'
     // for (let el in $('*[data-mask]')) {

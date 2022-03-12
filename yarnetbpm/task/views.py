@@ -5,8 +5,9 @@ from django.views.generic import TemplateView
 from django.template import loader
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login
 
-from task.models import Task, Fields, Values
+from task.models import History, Task, Fields, Values
 from regulations.models import Regulations
 from company.models import Company
 from violation.models import Violation
@@ -16,6 +17,21 @@ from decorators import POST
 class TaskInfo(TemplateView):
   template_name = 'task_info.html'
   model = Task
+
+  def get(self, request, *args, **kwargs):
+    print(request.user)
+    if (request.user.is_anonymous):
+      print('Anonymus')
+      user = authenticate(username='Gy', password='asdf')
+      if not user:
+        print('fixme')
+      else:
+        login(request, user)
+        print('authed')
+    else:
+      print('alredy registered :)')
+
+    return HttpResponse(self.get_context_data())
 
   def get_context_data(self, *args, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -34,12 +50,19 @@ class TaskTable(TemplateView):
     _task_id = int(request.POST.get('task_id'))
     [_task] = Task.objects.filter(pk=_task_id)
     [_stage] = Regulations.Stage.objects.filter(pk=_id)
+    _old_stage = _task.stage
     _task.stage = _stage
     
     if len(_task.stage.childs) == 0:
       _task.is_completed = True
 
     _task.save()
+
+    History.objects.new_record(
+      _task, 
+      _task.stage,
+      f"{_task.stage.button_name}, {_old_stage.title} => {_task.stage.title}: {request.user.fullname}."
+    )
 
     return redirect('/tasks/')
 
@@ -62,7 +85,6 @@ class TaskTable(TemplateView):
 
 # Добавление новой задачи
 class AddNewTask(TemplateView):
-
   def post(self, request, *args, **kwargs):
     task_name = request.POST.get('task_name')
     reg_id = int(request.POST.get('reg_id'))
@@ -100,6 +122,12 @@ class AddNewTask(TemplateView):
       new_value = Values(field=field, value=correct_value, task=new_task)
       new_value.save()
       values.append(new_value)
+
+    History.objects.new_record(
+      new_task, 
+      new_task.stage, 
+      f"Новая задача. Автор: {request.user.fullname}."
+    )
     
     return redirect('/tasks/')
 
@@ -135,7 +163,23 @@ def get_view_task_body(request):
   [task] = Task.objects.filter(pk=task_id)
   temp = loader.get_template('task_view.html')
   render_data = {
-    'task': task
+    'task': task,
+    'field_types': Fields.Types,
+    'stage_schemes': Regulations.Stage.Types,
+  }
+  html = temp.render(render_data, request=request)
+
+  return HttpResponse(json.dumps({ 'html': html }), 'application/json')
+
+@POST
+def get_view_task_history(request):
+  task_id = request.POST.get('task_id')
+  [task] = Task.objects.filter(pk=task_id)
+  history = History.objects.filter(task=task).order_by('datetime')
+  temp = loader.get_template('task_view_history.html')
+  render_data = {
+    'task': task,
+    'history': history,
   }
   html = temp.render(render_data, request=request)
 

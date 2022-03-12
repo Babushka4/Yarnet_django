@@ -1,0 +1,25 @@
+{% block sidebar_body %}
+  <div class="d-flex flex-column h-100">
+    <div class="m-0 mb-5 d-flex flex-row">
+      <h1>
+        История
+      </h1>
+    </div>
+
+    {% block sidebar_content %}
+      <div class="d-flex flex-column">
+        <div class="d-flex flex-row justify-content-end">
+          <button id="task-view" class="btn btn-outline-info" data-task-id="{{ task.id }}">
+            Вернуться
+          </button>
+        </div>
+
+        {% for record in history %}
+          <p class="text-muted">
+            {{ record }}
+          </p>
+        {% endfor %}
+      </div>
+    {% endblock sidebar_content %}
+  </div>
+{% endblock sidebar_body %}

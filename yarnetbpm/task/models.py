@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
@@ -221,3 +222,22 @@ class Values(models.Model):
       return value.displayed_name
 
     return value
+
+class HistoryManager(models.Manager):
+  def new_record(self, task, stage, action, date=None):
+    date = date if date != None else datetime.now()
+    rec = History(task=task, stage=stage, action=action, datetime=date)
+    rec.save()
+    
+    return rec
+
+class History(models.Model):
+  task = models.ForeignKey(Task, on_delete=models.DO_NOTHING, null=True, default=None)
+  stage = models.ForeignKey(Regulations.Stage, on_delete=models.DO_NOTHING, null=True, default=None)
+  datetime = models.DateTimeField()
+  action = models.CharField(max_length=65535)
+
+  objects = HistoryManager()
+
+  def __str__(self):
+    return f"{self.datetime.strftime('%d.%m.%y %H:%M')} {self.action}"
