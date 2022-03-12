@@ -54,11 +54,9 @@ class TaskTable(TemplateView):
     context['regulations_list'] = Regulations.objects.all()
 
     if 'id' in kwargs:
-      context['task_list'] = self.model.objects.filter(user=kwargs['id'], is_completed=False)
+      context['task_list'] = self.model.objects.filter(user=kwargs['id'], is_completed=False).order_by('pk')
     else:
-      context['task_list'] = self.model.objects.filter(is_completed=False)
-
-    print(context['task_list'])
+      context['task_list'] = self.model.objects.filter(is_completed=False).order_by('pk')
 
     return context
 
@@ -130,3 +128,15 @@ def get_sidebar_body(request):
   html = t.render(render_data, request=request)
 
   return HttpResponse(json.dumps({'html': html}), 'application/json')
+
+@POST
+def get_view_task_body(request):
+  task_id = request.POST.get('task_id')
+  [task] = Task.objects.filter(pk=task_id)
+  temp = loader.get_template('task_view.html')
+  render_data = {
+    'task': task
+  }
+  html = temp.render(render_data, request=request)
+
+  return HttpResponse(json.dumps({ 'html': html }), 'application/json')
