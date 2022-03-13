@@ -4,7 +4,7 @@ from datetime import datetime
 from django.views.generic import TemplateView
 from django.template import loader
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -69,7 +69,16 @@ class TaskTable(LoginRequiredMixin, TemplateView):
 
     return redirect('/tasks/')
 
-  def get_context_data(self, *args, **kwargs):
+  def get(self, request, *args, **kwargs):
+    current_coverage = request.GET.get('cov', 'all')
+
+    return render(
+      request,
+      self.template_name,
+      self.get_context_data(cov=current_coverage, user_id=request.user.id, **kwargs),
+    )
+
+  def get_context_data(self, *args, cov, user_id, **kwargs):
     context = super().get_context_data(**kwargs)
     context['company_list'] = Company.objects.all()
     context['districts'] = Task.District.choices
@@ -78,11 +87,20 @@ class TaskTable(LoginRequiredMixin, TemplateView):
     context['stage_schemes'] = Regulations.Stage.Types
     context['field_types'] = Fields.Types
     context['regulations_list'] = Regulations.objects.all()
+    cov_map = {
+      'me': 'Только мои',
+      'all': 'Все',
+    }
+    context['current_coverage'] = cov_map[cov]
 
-    if 'id' in kwargs:
-      context['task_list'] = self.model.objects.filter(user=kwargs['id'], is_completed=False).order_by('pk')
-    else:
-      context['task_list'] = self.model.objects.filter(is_completed=False).order_by('pk')
+    query_set = self.model.objects.filter(is_completed=False).order_by('pk')
+
+    if (cov == 'me'):
+      query_set = query_set.filter(pk=user_id)
+    
+    context['task_list'] = query_set
+
+    print(context)
 
     return context
 

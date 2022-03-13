@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from task.views import (
     TaskInfo,
@@ -13,7 +13,7 @@ from task.views import (
 )
 
 urlpatterns = [
-    path('', TaskTable.as_view()),
+    re_path('.*', TaskTable.as_view()),
     path('<int:id>', TaskTable.as_view()),
     path('new_task/', AddNewTask.as_view()),
     path('task_info/', TaskInfo.as_view()),
