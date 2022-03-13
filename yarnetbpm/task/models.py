@@ -236,6 +236,7 @@ class History(models.Model):
   stage = models.ForeignKey(Regulations.Stage, on_delete=models.DO_NOTHING, null=True, default=None)
   datetime = models.DateTimeField()
   action = models.CharField(max_length=65535)
+  author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
   objects = HistoryManager()
 
