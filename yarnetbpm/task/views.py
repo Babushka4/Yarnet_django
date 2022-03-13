@@ -61,7 +61,7 @@ class TaskTable(TemplateView):
     History.objects.new_record(
       _task, 
       _task.stage,
-      f"{_task.stage.button_name}: {_old_stage.title} => {_task.stage.title}",
+      f"{_task.stage.button_name}: {_old_stage.title} => {_task.stage.title}.",
       request.user,
     )
 
@@ -127,7 +127,7 @@ class AddNewTask(TemplateView):
     History.objects.new_record(
       new_task, 
       new_task.stage,
-      'Новая задача',
+      'Новая задача.',
       request.user,
     )
     
@@ -148,7 +148,7 @@ class ReassignPerformer(TemplateView):
       History.objects.new_record(
         _task,
         _task.stage,
-        f"Изменён исполнитель: {_old_performer.fullname} => {_user.fullname}",
+        f"Изменён исполнитель: {_old_performer.fullname} => {_user.fullname}.",
         request.user,
       )
     
