@@ -61,7 +61,8 @@ class TaskTable(TemplateView):
     History.objects.new_record(
       _task, 
       _task.stage,
-      f"{_task.stage.button_name}, {_old_stage.title} => {_task.stage.title}: {request.user.fullname}."
+      f"{_task.stage.button_name}, {_old_stage.title} => {_task.stage.title}: {request.user.fullname}.",
+      request.user,
     )
 
     return redirect('/tasks/')
@@ -125,8 +126,9 @@ class AddNewTask(TemplateView):
 
     History.objects.new_record(
       new_task, 
-      new_task.stage, 
-      f"Новая задача. Автор: {request.user.fullname}."
+      new_task.stage,
+      f"Новая задача. Автор: {request.user.fullname}.",
+      request.user,
     )
     
     return redirect('/tasks/')
@@ -175,7 +177,7 @@ def get_view_task_body(request):
 def get_view_task_history(request):
   task_id = request.POST.get('task_id')
   [task] = Task.objects.filter(pk=task_id)
-  history = History.objects.filter(task=task).order_by('datetime')
+  history = History.objects.group_by_date(task)
   temp = loader.get_template('task_view_history.html')
   render_data = {
     'task': task,

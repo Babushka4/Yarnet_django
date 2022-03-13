@@ -224,12 +224,26 @@ class Values(models.Model):
     return value
 
 class HistoryManager(models.Manager):
-  def new_record(self, task, stage, action, date=None):
+  def new_record(self, task, stage, action, author, date=None):
     date = date if date != None else datetime.now()
-    rec = History(task=task, stage=stage, action=action, datetime=date)
+    rec = self.model(task=task, stage=stage, action=action, author=author, datetime=date)
     rec.save()
     
     return rec
+  
+  def group_by_date(self, task):
+    result = { }
+
+    for record in self.model.objects.filter(task=task).order_by('datetime'):
+        str_date = record.datetime.strftime('%d.%m.%y')
+
+        if str_date not in result:
+          result[str_date] = []
+
+        result[str_date].append(record)
+
+    return result
+
 
 class History(models.Model):
   task = models.ForeignKey(Task, on_delete=models.DO_NOTHING, null=True, default=None)
@@ -240,5 +254,14 @@ class History(models.Model):
 
   objects = HistoryManager()
 
+  _previous = None
+
   def __str__(self):
     return f"{self.datetime.strftime('%d.%m.%y %H:%M')} {self.action}"
+
+  @property
+  def previous(self):
+    return History._previous
+
+  def set_previous(self):
+    History._previous = self

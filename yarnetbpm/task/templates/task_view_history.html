@@ -14,10 +14,22 @@
           </button>
         </div>
 
-        {% for record in history %}
-          <p class="text-muted">
-            {{ record }}
+        {% for date, records in history.items %}
+          <p class="my-3">
+            {{ date }}
           </p>
+
+          {% for record in records %}
+            <div class="text-muted row">
+              <span class="col-2">
+                {{ record.datetime|date:"H:i" }}
+              </span>
+
+              <span class="col">
+                {{ record.action }}
+              </span>
+            </div>
+          {% endfor %}
         {% endfor %}
       </div>
     {% endblock sidebar_content %}
