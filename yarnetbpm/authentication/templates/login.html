@@ -1,0 +1,46 @@
+{% extends 'unauth_index.html' %}
+
+{% block page_title %}
+	Панель управления | Авторизация
+{% endblock %}
+
+{% block main %}
+  <div class="coonteiner-fluid vh-100 d-flex justify-content-center align-items-center">
+    <div class="card w-25">
+      <div class="card-body">
+        {% if error_message != None %}
+          <div class="bg-danger-transparent-2 text-danger px-4 py-2 br-3 mb-4" role="alert">
+            {{ error_message }}
+          </div>
+        {% endif %}
+
+        <form class="form-control border-0" method="POST" action="">
+          <div class="login-block mb-5">
+            <label for="login-input">
+              Логин
+            </label>
+
+            <input id="login-input" class="form-control" name="login" />
+          </div>
+
+          <div class="password-block mb-5">
+            <label for="password-input">
+              Пароль
+            </label>
+
+            <input id="password-input" class="form-control" name="password" type="password" />
+          </div>
+
+          <div class="d-flex flex-row justify-content-between">
+            <button type="submit" class="btn btn-outline-primary">
+              Войти
+            </button>
+            <a href="/auth/registration/?next={{ next_url }}" class="btn btn-success">
+              Регистрация
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

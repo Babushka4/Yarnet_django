@@ -13,6 +13,7 @@
             {{ error_message }}
           </div>
         {% endif %}
+
         <form class="form-control border-0" method="POST" action="">
           <div class="login-block mb-5">
             <label for="login-input">
@@ -96,7 +97,7 @@
             <button type="submit" class="btn btn-outline-success">
               Регистрация
             </button>
-            <a href="login" class="btn btn-primary">
+            <a href="/auth/login/?next={{ next_url }}" class="btn btn-primary">
               Войти
             </a>
           </div>
