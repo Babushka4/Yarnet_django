@@ -226,7 +226,13 @@ class Values(models.Model):
 class HistoryManager(models.Manager):
   def new_record(self, task, stage, action, author, date=None):
     date = date if date != None else datetime.now()
-    rec = self.model(task=task, stage=stage, action=action, author=author, datetime=date)
+    rec = self.model(
+      task=task,
+      stage=stage,
+      action=f"{action}; Автор: {author.fullname}.",
+      author=author,
+      datetime=date,
+    )
     rec.save()
     
     return rec
