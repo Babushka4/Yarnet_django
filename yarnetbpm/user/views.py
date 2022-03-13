@@ -1,9 +1,9 @@
 from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from user.models import User
-from department.models import Department
 
-class UserTable(TemplateView):
+class UserTable(LoginRequiredMixin, TemplateView):
   template_name = 'user_table.html'
   model = User
 

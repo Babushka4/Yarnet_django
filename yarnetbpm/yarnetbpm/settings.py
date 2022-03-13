@@ -186,4 +186,4 @@ DATABASES = {
 }
 
 # Path to login page
-LOGIN_REDIRECT_URL = '/login'
+LOGIN_URL = '/auth/login/'

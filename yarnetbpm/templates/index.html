@@ -47,11 +47,14 @@
 
 			<div class="app-header header top-header shadow-none">
 				<div class="container-fluid">
-					<div class="app-header__text p-0" style="margin: 12px 0 12px 0">
-						<h5>
+					<div class="app-header__text p-0 d-flex flex-row justify-content-between align-items-center">
+						<h5 class="m-0">
 							{% block header %}
 							{% endblock header %}
 						</h5>
+						<a href="/logout" class="btn btn-icon btn-outline-danger d-flex flex-row align-items-center">
+							<i class="fa fa-sign-out"></i>
+						</a>
 					</div>
 				</div>
 			</div>

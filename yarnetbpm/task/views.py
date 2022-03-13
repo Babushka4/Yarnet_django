@@ -6,6 +6,8 @@ from django.template import loader
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from task.models import History, Task, Fields, Values
 from regulations.models import Regulations
@@ -14,7 +16,7 @@ from violation.models import Violation
 from user.models import User
 from decorators import POST
 
-class TaskInfo(TemplateView):
+class TaskInfo(LoginRequiredMixin, TemplateView):
   template_name = 'task_info.html'
   model = Task
 
@@ -41,7 +43,7 @@ class TaskInfo(TemplateView):
     return context
 
 # Таблица задач
-class TaskTable(TemplateView):
+class TaskTable(LoginRequiredMixin, TemplateView):
   template_name = 'tasks.html'
   model = Task
 
@@ -85,7 +87,7 @@ class TaskTable(TemplateView):
     return context
 
 # Добавление новой задачи
-class AddNewTask(TemplateView):
+class AddNewTask(LoginRequiredMixin, TemplateView):
   def post(self, request, *args, **kwargs):
     task_name = request.POST.get('task_name')
     reg_id = int(request.POST.get('reg_id'))
@@ -133,7 +135,7 @@ class AddNewTask(TemplateView):
     
     return redirect('/tasks/')
 
-class ReassignPerformer(TemplateView):
+class ReassignPerformer(LoginRequiredMixin, TemplateView):
   def post(self, request, *args, **kwargs):
     _task_id = int(request.POST.get('task_id'))
     _reassign_to = int(request.POST.get('reassign_to'))
@@ -156,6 +158,7 @@ class ReassignPerformer(TemplateView):
 
 
 @POST
+@login_required
 def get_form(request):
   regulations_id = request.POST.get('id')
   t = loader.get_template('create_new_task_content.html')
@@ -171,6 +174,7 @@ def get_form(request):
   return HttpResponse(json.dumps({'html': html}), 'application/json')
 
 @POST
+@login_required
 def get_sidebar_body(request):
   t = loader.get_template('task_creator_sidebar.html')
   render_data = {
@@ -181,6 +185,7 @@ def get_sidebar_body(request):
   return HttpResponse(json.dumps({'html': html}), 'application/json')
 
 @POST
+@login_required
 def get_view_task_body(request):
   task_id = request.POST.get('task_id')
   [task] = Task.objects.filter(pk=task_id)
@@ -196,6 +201,7 @@ def get_view_task_body(request):
   return HttpResponse(json.dumps({ 'html': html }), 'application/json')
 
 @POST
+@login_required
 def get_view_task_history(request):
   task_id = request.POST.get('task_id')
   [task] = Task.objects.filter(pk=task_id)

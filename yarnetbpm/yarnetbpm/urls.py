@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
+
+from authentication.views import LogoutView
 
 urlpatterns = [
     path('auth/', include('authentication.urls')),
@@ -24,5 +27,6 @@ urlpatterns = [
     path('users/', include('user.urls')),
     path('tasks/', include('task.urls')),
     path('ltr/', include('ltr.urls')),
-    path('', TemplateView.as_view(template_name='index.html'))
+    path('', login_required(TemplateView.as_view(template_name='index.html'))),
+    path("logout/", LogoutView.as_view()),
 ]
