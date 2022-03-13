@@ -133,6 +133,27 @@ class AddNewTask(TemplateView):
     
     return redirect('/tasks/')
 
+class ReassignPerformer(TemplateView):
+  def post(self, request, *args, **kwargs):
+    _task_id = int(request.POST.get('task_id'))
+    _reassign_to = int(request.POST.get('reassign_to'))
+    [_task] = Task.objects.filter(pk=_task_id)
+    [_user] = User.objects.filter(pk=_reassign_to)
+    
+    if _task.performer.id != _user.id:
+      _old_performer = _task.performer
+      _task.performer = _user
+
+      _task.save()
+      History.objects.new_record(
+        _task, 
+        _task.stage,
+        f"Изменён исполнитель. {_old_performer.fullname} => {_user.fullname} Автор: {request.user.fullname}.",
+        request.user,
+      )
+    
+    return redirect('/tasks/')
+
 
 @POST
 def get_form(request):
@@ -166,6 +187,7 @@ def get_view_task_body(request):
   temp = loader.get_template('task_view.html')
   render_data = {
     'task': task,
+    'all_users': User.objects.all(),
     'field_types': Fields.Types,
     'stage_schemes': Regulations.Stage.Types,
   }

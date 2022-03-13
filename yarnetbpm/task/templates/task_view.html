@@ -14,42 +14,57 @@
 
     {% block sidebar_content %}
       <div class="d-flex flex-column">
-        <div class="d-flex flex-row justify-content-end">
+        <div class="d-flex flex-row justify-content-end mb-5">
           <button id="task-history" class="btn btn-outline-warning" data-task-id="{{ task.id }}">
             История
           </button>
         </div>
 
         <div class="d-flex flex-column">
-          <p>
-            <span class="text-muted">
+          <div class="d-flex flex-row mb-4 align-items-center">
+            <span class="text-muted col">
               Автор: 
             </span>
 
-            <button class="btn btn-light disabled">
+            <button class="btn btn-light disabled col">
               {{ task.author.fullname }}
             </button>
-          </p>
+          </div>
           
-          <p>
-            <span class="text-muted">
+          <div class="d-flex flex-row mb-4 align-items-center">
+            <span class="text-muted col">
               Текущий исполнитель: 
             </span>
             
-            <button class="btn btn-light disabled">
-              {{ task.performer.fullname }}
-            </button>
-          </p>
+            <select
+              class="form-control select2 form-select d-inline col"
+              data-placeholder="Выберите пользователя"
+              name="reassign_to"
+              form="reassign-performer"
+              role="button"
+            >
+              {% for user in all_users %}
+                <option
+                  value="{{ user.id }}"
+                  {% if task.performer.id == user.id %}
+                    selected
+                  {% endif %}
+                >
+                  {{ user.fullname }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
           
           <hr class="mt-0 mb-4" />
 
           {% for value in task.all_values %}
-            <p>
-              <span class="text-muted">
+            <div class="d-flex flex-row mb-4 align-items-center">
+              <span class="text-muted col">
                 {{ value.field.title }}: 
               </span>
 
-              <button class="btn btn-light disabled">
+              <button class="btn btn-light disabled col">
                 {% if value.displayed_value == None %}
                   ─
                 {% elif value.field.field_type == field_types.DATE %}
@@ -58,10 +73,16 @@
                   {{ value.displayed_value }}
                 {% endif %}
               </button>
-            </p>
+            </div>
           {% endfor %}
 
           <hr class="mt-0 mb-4" />
+          
+          <form id="reassign-performer" method="POST" action="reassign/" class="mt-auto">
+            <button class="btn btn-block btn-outline-primary mb-3" name="task_id" value="{{ task.id }}">
+              Переназначить
+            </button>
+          </form>
 
           <form method="POST" action="" class="mt-auto">
             <input type="hidden" name="task_id" value="{{ task.id }}">
