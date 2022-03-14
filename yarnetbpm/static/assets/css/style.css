@@ -86,6 +86,20 @@
     background-color: #ddcece !important;
 }
 
+.task-show-options.without-arrow::after {
+    border: none !important;
+}
+
+.task-show-options {
+    padding-right: 0 !important;
+}
+
+.task-show-options {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
 /*------ Accordion -------*/
 .accordion .card:not(:first-of-type):not(:last-of-type) {
     border-bottom: 0;

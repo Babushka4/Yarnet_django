@@ -1,6 +1,8 @@
 import json
 
 from datetime import datetime
+from urllib import request
+from urllib.parse import urlencode, urlparse, parse_qs
 from django.views.generic import TemplateView
 from django.template import loader
 from django.http import HttpResponse
@@ -19,21 +21,6 @@ from decorators import POST
 class TaskInfo(LoginRequiredMixin, TemplateView):
   template_name = 'task_info.html'
   model = Task
-
-  def get(self, request, *args, **kwargs):
-    print(request.user)
-    if (request.user.is_anonymous):
-      print('Anonymus')
-      user = authenticate(username='Gy', password='asdf')
-      if not user:
-        print('fixme')
-      else:
-        login(request, user)
-        print('authed')
-    else:
-      print('alredy registered :)')
-
-    return HttpResponse(self.get_context_data())
 
   def get_context_data(self, *args, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -67,19 +54,22 @@ class TaskTable(LoginRequiredMixin, TemplateView):
       request.user,
     )
 
-    return redirect('/tasks/')
+    return redirect(request.get_full_path())
 
   def get(self, request, *args, **kwargs):
-    current_coverage = request.GET.get('cov', 'all')
-
     return render(
       request,
       self.template_name,
-      self.get_context_data(cov=current_coverage, user_id=request.user.id, **kwargs),
+      self.get_context_data(
+        request=request,
+        user_id=request.user.id,
+        **kwargs
+      ),
     )
 
-  def get_context_data(self, *args, cov, user_id, **kwargs):
+  def get_context_data(self, *args, request, user_id, **kwargs):
     context = super().get_context_data(**kwargs)
+    current_path = request.get_full_path()
     context['company_list'] = Company.objects.all()
     context['districts'] = Task.District.choices
     context['violation_list'] = Violation.objects.all()
@@ -91,16 +81,39 @@ class TaskTable(LoginRequiredMixin, TemplateView):
       'me': 'Только мои',
       'all': 'Все',
     }
-    context['current_coverage'] = cov_map[cov]
+    show_map = {
+      'completed': 'Только выполненные',
+      'uncompleted': 'Только невыполненные',
+      'all': 'Все',
+    }
+    url_parts = parse_qs(urlparse(current_path)[4])
 
-    query_set = self.model.objects.filter(is_completed=False).order_by('pk')
+    cov = request.GET.get('cov', 'all')
+    show = request.GET.get('show', 'uncompleted')
+    context['current_coverage'] = cov_map[cov]
+    context['showed_data'] = show_map[show]
+    
+
+    context['cov_urls'] = {
+      '/tasks/?' + (url_parts.update({ 'cov': key, 'show': show }), urlencode(url_parts))[1]: value \
+        for key, value in cov_map.items()
+    }
+    context['show_urls'] = {
+      '/tasks/?' + (url_parts.update({ 'cov': cov, 'show': key }), urlencode(url_parts))[1]: value \
+        for key, value in show_map.items()
+    }
+
+    query_set = self.model.objects.order_by('pk')
 
     if (cov == 'me'):
       query_set = query_set.filter(pk=user_id)
     
+    if (show == 'uncompleted'):
+      query_set = query_set.filter(is_completed=False)
+    elif (show == 'completed'):
+      query_set = query_set.filter(is_completed=True)
+    
     context['task_list'] = query_set
-
-    print(context)
 
     return context
 
@@ -134,7 +147,7 @@ class AddNewTask(LoginRequiredMixin, TemplateView):
       correct_value = posted_value
 
       if field.field_type == Fields.Types.DATE:
-        correct_value = datetime.strptime(posted_value, '%H:%M %m.%d.%Y')
+        correct_value = datetime.strptime(posted_value, '%H:%M %d.%m.%Y')
 
       if field.field_type in [Fields.Types.USER, Fields.Types.COMPANY]:
         correct_value = int(correct_value)

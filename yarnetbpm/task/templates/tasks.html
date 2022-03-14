@@ -31,18 +31,28 @@
   </div>
 
   <div class="btn-group mt-2 mb-2">
-		<button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
-			Отображать заявки: {{ current_coverage }} <span class="caret"></span>
+		<button type="button" class="btn task-show-options without-arrow dropdown-toggle" data-bs-toggle="dropdown">
+			Отображать заявки: {{ current_coverage }},
 		</button>
 
 		<ul class="dropdown-menu" role="menu">
-			<li>
-        <a href="/tasks/?cov=all">Все</a>
-      </li>
+      {% for link, title in cov_urls.items %}
+        <li>
+          <a href="{{ link }}">{{ title }}</a>
+        </li>
+      {% endfor %}
+		</ul>
 
-			<li>
-        <a href="/tasks/?cov=me">Только мои</a>
-      </li>
+    <button type="button" class="btn task-show-options dropdown-toggle" data-bs-toggle="dropdown">
+			{{ showed_data }} <span class="caret"></span>
+		</button>
+
+		<ul class="dropdown-menu" role="menu">
+			{% for link, title in show_urls.items %}
+        <li>
+          <a href="{{ link }}">{{ title }}</a>
+        </li>
+      {% endfor %}
 		</ul>
 	</div>
 

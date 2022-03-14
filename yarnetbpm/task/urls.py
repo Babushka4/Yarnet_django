@@ -13,7 +13,8 @@ from task.views import (
 )
 
 urlpatterns = [
-    re_path('.*', TaskTable.as_view()),
+    path('?cov=<str:cov>', TaskTable.as_view()),
+    path('', TaskTable.as_view()),
     path('<int:id>', TaskTable.as_view()),
     path('new_task/', AddNewTask.as_view()),
     path('task_info/', TaskInfo.as_view()),
