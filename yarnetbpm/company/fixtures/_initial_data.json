@@ -1,13 +1,13 @@
 [
   {
-    "model": "company.User",
+    "model": "company.Company",
     "pk": 1,
     "fields": {
       "name": "Test_Company #1"
     }
   },
   {
-    "model": "user.User",
+    "model": "company.Company",
     "pk": 2,
     "fields": {
        "name": "Test_Company #2"

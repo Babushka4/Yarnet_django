@@ -1,0 +1,58 @@
+[
+  {
+    "model": "task.Task",
+    "pk": 1,
+    "fields": {
+      "name": "Test task #1",
+      "is_completed": "False",
+      "stage": 1,
+      "author": 1,
+      "performer": 2,
+      "regulations": 1
+    }
+  },
+
+
+  {
+    "model": "task.Fields",
+    "pk": 1,
+    "fields": {
+      "field_type": "STR",
+      "title": "About stage #1",
+      "show_in_table": "False",
+      "stage": 1
+    }
+  },
+  {
+    "model": "task.Fields",
+    "pk": 2,
+    "fields": {
+      "field_type": "STR",
+      "title": "About stage #2",
+      "show_in_table": "False",
+      "stage": 2
+    }
+  },
+
+
+  {
+    "model": "task.Values",
+    "pk": 1,
+    "fields": {
+      "field": 1,
+      "task": 1,
+      "value_string": "Описываю этап #1",
+      "is_choosed": "False"
+    }
+  },
+  {
+    "model": "task.Values",
+    "pk": 2,
+    "fields": {
+      "field": 2,
+      "task": 1,
+      "value_string": "Описываю этап #2",
+      "is_choosed": "False"
+    }
+  }
+]

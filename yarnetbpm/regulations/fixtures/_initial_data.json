@@ -1,0 +1,55 @@
+[
+  {
+    "model": "regulations.Stage",
+    "pk": 1,
+    "fields": {
+      "scheme": "SUC",
+      "title": "Some title of stage #1",
+      "button_name": "Button name #1",
+      "performer": 1
+    }
+  },
+  {
+    "model": "regulations.Stage",
+    "pk": 2,
+    "fields": {
+      "scheme": "DEF",
+      "title": "Some title of stage #2",
+      "button_name": "Button name #2",
+      "performer": 2,
+      "parent": 1
+    }
+  },
+  {
+    "model": "regulations.Stage",
+    "pk": 3,
+    "fields": {
+      "scheme": "WAI",
+      "title": "Some title of stage #3",
+      "button_name": "Button name #3",
+      "performer": 2,
+      "parent": 2
+    }
+  },
+
+  {
+    "model": "regulations.Regulations",
+    "pk": 1,
+    "fields": {
+      "performer": 1,
+      "author": 1,
+      "first_stage": 1,
+      "name": "Some test regulation name #2"
+    }
+  },
+  {
+    "model": "regulations.Regulations",
+    "pk": 2,
+    "fields": {
+      "performer": 2,
+      "author": 2,
+      "first_stage": 1,
+      "name": "Some test regulation name #2"
+    }
+  }
+]

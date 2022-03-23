@@ -1,0 +1,34 @@
+[
+  {
+    "model": "department.Department",
+    "pk": 1,
+    "fields": {
+      "name": "Test_department #1 of company 1",
+      "company": 1
+    }
+  },
+  {
+    "model": "department.Department",
+    "pk": 2,
+    "fields": {
+      "name": "Test_department #2 of company 1",
+      "company": 1
+    }
+  },
+  {
+    "model": "department.Department",
+    "pk": 3,
+    "fields": {
+      "name": "Test_department #1 of company 2",
+      "company": 2
+    }
+  },
+    {
+    "model": "department.Department",
+    "pk": 4,
+    "fields": {
+      "name": "Test_department #2 of company 2",
+      "company": 2
+    }
+  }
+]
