@@ -1,0 +1,16 @@
+[
+  {
+    "model": "company.User",
+    "pk": 1,
+    "fields": {
+      "name": "Test_Company #1"
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 2,
+    "fields": {
+       "name": "Test_Company #2"
+    }
+  }
+]

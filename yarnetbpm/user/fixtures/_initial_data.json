@@ -1,0 +1,36 @@
+[
+  {
+    "model": "user.User",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$Qy3WHNo0g9ALUMUu7uz8lB$SJ51+flHkOIxg8OSf4qqTBHAluLrOases4D4Fc0fLMg=",
+      "username": "test1",
+      "fullname": "Test user #1",
+      "email": "test1@yandex.ru",
+      "telephone": "123",
+      "is_admin": "False",
+      "is_active": "False",
+      "is_staff": "False",
+      "is_superuser": "False",
+      "department": 1,
+      "position": 1
+    }
+  },
+  {
+    "model": "user.User",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$Qy3WHNo0g9ALUMUu7uz8lB$SJ51+flHkOIxg8OSf4qqTBHAluLrOases4D4Fc0fLMg=",
+      "username": "test2",
+      "fullname": "Test user #2",
+      "email": "test2@yandex.ru",
+      "telephone": "321",
+      "is_admin": "False",
+      "is_active": "False",
+      "is_staff": "False",
+      "is_superuser": "False",
+      "department": 1,
+      "position": 1
+    }
+  }
+]

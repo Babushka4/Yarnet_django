@@ -42,8 +42,6 @@ class HandBookField(models.Model):
 
     field_type = models.CharField(max_length=3, choices=Types.choices)
     title = models.CharField(max_length=25, null=True)
-    # category = models.ManyToManyField(HandBookCategory, blank=True)
-
 
 
 @with_json_serialize

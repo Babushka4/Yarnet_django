@@ -6,7 +6,7 @@ from company.models import Company
 from user.models import User
 from regulations.models import Regulations
 from decorators.ClassDecorators import with_json_serialize
-# from handbook.models import HandBook
+# from handbook.models import HandBookCategory
 
 
 @with_json_serialize
@@ -102,7 +102,7 @@ class Values(models.Model):
   value_district = models.CharField(max_length=3, default=None, null=True, choices=Task.District.choices)
   is_choosed = models.BooleanField(default=None, null=True)
   # поле, ссылающееся на справочник по его id
-  # value_handbook = models.ForeignKey(HandBook, on_delete=models.DO_NOTHING, default=None, null=True)
+  # value_handbook = models.ForeignKey(HandBookCategory, on_delete=models.DO_NOTHING, default=None, null=True)
 
   def __init__(self, *args, value=None, field=None, **kwargs):
 
