@@ -7,6 +7,7 @@ class HandBookCategory(models.Model):
     """Категория справочника справочников
     Каждой категории привязан перечень полей, актуальных для неё (HandBookField)
     и объекты справочника с определенной иерархией из HandBookObjects."""
+    test_var = "testing push"
     title = models.CharField(max_length=100, default=None, null=True)
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING, default=None, null=True)
     creation_date = models.DateField(auto_now=True)
