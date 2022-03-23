@@ -30,3 +30,4 @@ class Regulations(models.Model):
   first_stage = models.ForeignKey('Stage', on_delete=models.DO_NOTHING, default=None, null=True)
   name = models.CharField(max_length=255)
   Stage = Stage
+

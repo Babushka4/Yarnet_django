@@ -15,6 +15,7 @@
 
 
 {% block body %}
+  <a>Filter</a>
   <div class="card shadow-none" style="margin-top: 30px">
     <div class="table-responsive">
       <table class="table card-table table-vcenter text-nowrap mb-0">
@@ -35,19 +36,36 @@
               </td>
 
               <td class="py-5">
-                {{ user.department.name }}
+                {% if user.department.name %}
+                  {{ user.department.name }}
+                {% else %}
+                  Не определено
+                {% endif %}
               </td>
 
               <td class="py-5">
-                {{ user.position }}
+                {% if user.position %}
+                  {{ user.position }}
+                {% else %}
+                  Не определено
+                {% endif %}
+
               </td>
 
               <td class="py-5">
-                {{ user.email }}
+                {% if user.email %}
+                  {{ user.email }}
+                {% else %}
+                  Не определено
+                {% endif %}
               </td>
 
               <td class="py-5">
-                {{ user.telephone }}
+                {% if user.telephone %}
+                  {{ user.telephone }}
+                {% else %}
+                  Не определено
+                {% endif %}
               </td>
             </tr>
           {% endfor %}

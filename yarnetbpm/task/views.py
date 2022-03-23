@@ -18,6 +18,7 @@ from violation.models import Violation
 from user.models import User
 from decorators import POST
 
+
 class TaskInfo(LoginRequiredMixin, TemplateView):
   template_name = 'task_info.html'
   model = Task
@@ -26,8 +27,8 @@ class TaskInfo(LoginRequiredMixin, TemplateView):
     context = super().get_context_data(**kwargs)
     context['tasks_list'] = Task.objects.all()
     context['field_types'] = Fields.Types
-    
     return context
+
 
 # Таблица задач
 class TaskTable(LoginRequiredMixin, TemplateView):
@@ -57,14 +58,8 @@ class TaskTable(LoginRequiredMixin, TemplateView):
     return redirect(request.get_full_path())
 
   def get(self, request, *args, **kwargs):
-    return render(
-      request,
-      self.template_name,
-      self.get_context_data(
-        request=request,
-        user_id=request.user.id,
-        **kwargs
-      ),
+    return render(request, self.template_name,
+                  self.get_context_data( request=request, user_id=request.user.id, **kwargs),
     )
 
   def get_context_data(self, *args, request, user_id, **kwargs):

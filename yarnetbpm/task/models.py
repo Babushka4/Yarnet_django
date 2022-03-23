@@ -6,6 +6,8 @@ from company.models import Company
 from user.models import User
 from regulations.models import Regulations
 from decorators.ClassDecorators import with_json_serialize
+# from handbook.models import HandBook
+
 
 @with_json_serialize
 class Task(models.Model):
@@ -20,6 +22,8 @@ class Task(models.Model):
   performer = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='task_performer')
   is_completed = models.BooleanField(default=False)
 
+
+  # возвращает из БД поля в хронолгическом порядке
   @property
   def all_fields(self):
     all_fields = [*list(self.stage.fields_set.all())]
@@ -29,17 +33,20 @@ class Task(models.Model):
       current_reglament_fields = list(stage_parent.fields_set.all())
       all_fields = [*all_fields, *current_reglament_fields]
       stage_parent = stage_parent.parent
-    
+
     return list(set(all_fields))
 
+  # возвращает набор полей со значением True св-ва show_in_table
   @property
   def table_fields(self):
     return list(filter(lambda x: x.show_in_table, self.all_fields))
 
+  # получение всех значений полей
   @property
   def all_values(self):
     return self.values_set.all()
 
+  # возвращает все связанные с таблицой поля и их значения
   @property
   def table_values(self):
     table_fields = self.table_fields
@@ -60,7 +67,9 @@ class Fields(models.Model):
     USER = 'USR', 'СОТРУДНИК'
     COMPANY = 'CMP', 'ОРГАНИЗАЦИЯ'
     DISTRICT = 'DIS', 'РАЙОН'
-    NUM = 'NUM', 'НОМЕР'
+    NUM = 'NUM', 'НОМЕР',
+    # доюавление справочника к типам полей этапа
+    HB = 'HB', 'СПРАВОЧНИК'
     
   field_type = models.CharField(max_length=3, choices=Types.choices)
   title = models.CharField(max_length=255)
@@ -92,8 +101,11 @@ class Values(models.Model):
   value_company = models.ForeignKey(Company, on_delete=models.DO_NOTHING, default=None, null=True)
   value_district = models.CharField(max_length=3, default=None, null=True, choices=Task.District.choices)
   is_choosed = models.BooleanField(default=None, null=True)
+  # поле, ссылающееся на справочник по его id
+  # value_handbook = models.ForeignKey(HandBook, on_delete=models.DO_NOTHING, default=None, null=True)
 
   def __init__(self, *args, value=None, field=None, **kwargs):
+
     search_map = {
       Fields.Types.STRING: 'value_string',
       Fields.Types.INTEGER: 'value_int',
@@ -105,12 +117,15 @@ class Values(models.Model):
       Fields.Types.COMPANY: 'value_company',
       Fields.Types.DISTRICT: 'value_district',
       Fields.Types.NUM: 'value_string',
+      Fields.Types.HB: 'value_handbook'
     }
 
     try:
       if (value != None):
+
         if (field.field_type == Fields.Types.NUM):
           kwargs[search_map[field.field_type]] = f'№ {value}'
+
         else:
           kwargs[search_map[field.field_type]] = value
 
@@ -271,3 +286,5 @@ class History(models.Model):
 
   def set_previous(self):
     History._previous = self
+
+

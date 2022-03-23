@@ -72,11 +72,13 @@ else:
 env.read_env(env.str('ENV_PATH', env_path.resolve()))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_var('SECRET_KEY')
+# SECRET_KEY = get_var('SECRET_KEY')
+SECRET_KEY = 'django-insecure-5*tpxt!*yke2z2t#5nx9zg$5ob((j&bn9d_9\$w1!%j4)612twg'
 
 # Application definition
 
 INSTALLED_APPS = [
+    'handbook.apps.HandbookConfig',
     'authentication.apps.AuthenticationConfig',
     'company.apps.CompanyConfig',
     'department.apps.DepartmentConfig',
@@ -96,6 +98,7 @@ INSTALLED_APPS = [
 ]
 
 AUTH_USER_MODEL = 'user.User'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -172,8 +175,21 @@ STATICFILES_DIRS = [STATIC_DIR]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ['212.232.62.132']
+# ALLOWED_HOSTS = ['212.232.62.132']
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'yarnetbpm',
+        'USER': 'admin',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432'
+    }
+}
+
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -184,6 +200,7 @@ DATABASES = {
         'PORT': get_db('PORT'),
     }
 }
+'''
 
 # Path to login page
 LOGIN_URL = '/auth/login/'
